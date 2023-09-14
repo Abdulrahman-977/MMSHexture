@@ -1,0 +1,360 @@
+﻿@model WebApplication5.Models.MeetingViewModel
+@{
+    ViewBag.Title = " إنشاء أجتماع مُصغر";
+}
+<div id="wrapper">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <h2 class="col-lg-10" style="color: #bba20b; margin-inline: -39px; margin-top: 3%;">
+            <span class="material-symbols-outlined"><span class="material-symbols-outlined" style="font-size: 18px;">diversity_3</span></span><b> إنشاء أجتماع مُصغر </b>
+        </h2>
+
+        <div class="ibox-content" style="margin-left:50px;margin-right:185px ;margin-bottom: 7%;">
+            <div class="row">
+                @using (Html.BeginForm("Add", "Meeting"))
+                {
+                    <div id="step1" style="display:block;">
+                        <h3 style="color: #406847; margin-right: 4px; ">
+                            <span class="material-symbols-outlined"
+                                  style="font-size: 18px;margin-right: 7px;">feed</span> معلومات الأجتماع
+                        </h3>
+                        <fieldset>
+                            <div class="row" class="col-lg-12" style="padding: 30px;direction: rtl;">
+                                <div class="col-lg-6 col-md-6 col-sm-12" style="padding-right: 30px;">
+                                    <div class="form-group">
+                                        <label for="meetingSubject">موضوع الأجتماع *:</label>
+                                        <input class="form-control" type="text" name="meetingSubject" id="meetingSubject" placeholder="الموضوع">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="DropListMeetingBoard">أختيار القاعة *:</label>
+                                        <select required class="form-control" name="roomId" id="roomId">
+                                            <option value="" selected>الرجاء اختيار القاعة</option>
+                                            @foreach (var board in ViewBag.Rooms as List<Core.Models.RoomViewModel>)
+                                            {
+                                                <option value="@board.roomId">@board.roomName</option>
+                                            }
+                                        </select>
+
+                                    </div>
+
+                                    @*<label for="DropListMeetingBoard" >قاعة الأجتماع:</label>
+                            <select class="form-control" asp-for="boardId">
+                                @foreach(var board in )
+                            </select>*@
+                                    <div class="form-group">
+                                        <label for="DropListMeetingBoard">أختيار لجنة *:</label>
+                                        <select required class="form-control" name="boardId" id="boardId">
+                                            <option value="" selected>الرجاء اختيار اللجنة</option>
+                                            @foreach (var board in ViewBag.Boards as List<Core.Models.BoardViewwModel>)
+                                            {
+                                                <option value="@board.boardId">@board.boardName</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12" style="margin-left: 0;padding-right: 30px;float: right;">
+                                    <div class="form-group">
+                                        <label for="CoordinatorName">الرقم المرجعي *:</label>
+                                        <input class="form-control" type="text" value="@ViewBag.MeetingNum" readonly name="meetingNumber" id="meetingNumber">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="data">التاريخ *:</label>
+                                        <input class="form-control" type="date" name="meetingDate" id="meetingDate">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="time">الوقت *:</label>
+                                        <input class="form-control" type="time" name="meetingStartTime" id="meetingStartTime">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="To">إلى *:</label>
+                                        <input class="form-control" type="time" name="meetingEndTime" id="meetingEndTime">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    /**/
+                    <div id="step2" style="display:none;">
+                        <h1 style="color: #406847;">دعوة الحضور</h1>
+                        <div class="full-height-scroll">
+                            <div class="row">
+                                <div class="col-md-6" style="margin-right:-183px;">
+                                    <div class="form-group">
+                                        <label for="DropListMeetingPlace"> أختيار الأشخاص *:</label>
+                                        <select class="form-control" name="Attendees" id="Attendees">
+                                            @foreach (var user in ViewBag.Users as List<Core.Models.UserDropDownViewModel>)
+                                            {
+                                                <option value="@user.id">@user.fullname</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="DropListMeetingPlacee">تحديد المنصب *:</label>
+                                        <input class="form-control" placeholder="أسم المنصب" name="attendeeOrganizationInput" id="attendeeOrganizationInput">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="DropListMeetingPlace">أختيار الدور *:</label>
+                                        <select class="form-control" name="AttendeeRoleInput" id="AttendeeRoleInput">
+                                            <option value="">الرجاء اختيار الدور</option>
+                                            <option value="1">منسق</option>
+                                            <option value="2">عضو</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="DropListMeetingPlacee">ملاحظات حول الأجتماع</label>
+                                        <textarea class="form-control" name="meetingComment" id="meetingComment" cols="5"
+                                                  rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group" style="
+                                         height:20px">
+                                        <button type="button" onclick="addPerson()"
+                                                class="btn btn-primary btn-sm">
+                                            <i class="fa fa-plus" style="margin-left: 12px;"> </i>اضافة
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="padding:0">
+
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content" style="border:none">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>الأسم</th>
+                                                        <th>المنصب</th>
+                                                        <th>الدور</th>
+                                                        <th>خصائص </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tableBody"></tbody>
+                                            </table>
+                                        </div>
+                                        <br>
+                                        <br> <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div id="step3" style="display:none;">
+                <h1 style="color:#406847;">الاجهزة</h1>
+                <div class="full-height-scroll">
+                    <div class="row">
+                        <div id="devicetable" class="col-md-12" style="margin-right:-183px;">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>*@
+
+
+                    <a href="javascript:" id="nextBtn" class="btn btn-primary" onclick="nextStep(this)">التالي</a>
+
+                    <a href="javascript:" id="submitBtn" class="btn btn-primary" style="display:none" onclick="submitform()">ارسال</a>
+                    <a href="javascript:" id="prevBtn" class="btn btn-primary" onclick="prevStep(this)">السابق</a>
+
+                }
+            </div>
+        </div>
+    </div>
+       
+</div>
+
+
+@section scripts{
+
+    <script>
+        var AttendeesList = [];
+        var DevicesList = [];
+        var currentstep = 1;
+        function prevStep(ele) {
+            if (currentstep != 1) {
+                if (currentstep == 3) {
+                    $("#submitBtn").hide();
+                    $("#nextBtn").show();
+                }
+                $("#step" + currentstep).hide();
+                currentstep -= 1;
+                $("#step" + currentstep).show();
+            }
+        }
+        function nextStep(ele) {
+            var check = false;
+            if (currentstep == 1) {
+                check = $("#meetingSubject").val() != "" && $("#boardId").val() != "" && $("#meetingNumber").val() != "" && $("#meetingNumber").val() != "" && $("#meetingStartTime").val() != "" && $("#meetingEndTime").val() != ""
+            } else if (currentstep == 2) {
+                check = AttendeesList.length != 0
+            } else if (currentstep == 3) {
+               
+            }
+            if (check) {
+                if (currentstep == 1) {
+                    $("#step" + currentstep).hide();
+                    currentstep += 1;
+                    //$(ele).hide();
+                    $("#step" + currentstep).show();
+                    //$("#submitBtn").show();
+                    $(ele).attr("disabled", false);
+                } else if (currentstep == 2) {
+                    $.ajax({
+                        type: "POST",
+                        url: "../Device/Search",
+                        data: {
+                            roomId: $("#roomId").val(), count: AttendeesList.length
+                        },
+                    }).done(function (result) {
+                        $("#devicetable").html(result)                       
+                        $(AttendeesList).each(function (index, item) {
+                            $(".attendeeselect").append("<option value='" + item.userId + "' >" + item.attendeeName + "</option>")
+
+                        });
+                        $("#step" + currentstep).hide();
+                        currentstep += 1;
+                        $(ele).hide();
+                        $("#step" + currentstep).show();
+                        $("#submitBtn").show();
+                        $(ele).attr("disabled", false);
+                    }).fail(function (data) {
+                        // Optionally alert the user of an error here...
+                    });
+                    
+                }
+                
+            } else {
+                var x = document.getElementById("snackbarerror");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            }
+        }
+        //function prevStep(ele) {
+        //    $(ele).attr("disabled", true);;
+        //    $("#nextBtn").show();
+        //    $("#submitBtn").hide();
+        //    $("#step1").show();
+        //    $("#step2").hide();
+        //}
+        //function nextStep(ele) {
+        //    $(ele).hide();
+        //    $("#submitBtn").show();
+        //    $(ele).attr("disabled", false);
+        //    $("#step1").hide();
+        //    $("#step2").show();
+        //}
+        function submitform() {
+            $("#snackbarstartrequest").addClass("show");
+            if (check = AttendeesList.length != 0) {
+                var form = $("form");
+                var data = $("form").serializeArray(); // convert form to array
+                $(AttendeesList).each(function (index, item) {
+                    console.log(item)
+                    console.log(item.attendeeName)
+                    data.push({ name: "attendeeName", value: item.attendeeName });
+                    data.push({ name: "userId", value: item.userId })
+                    data.push({ name: "attendeeOrganization", value: item.attendeeOrganization })
+                    data.push({ name: "attendeeRole", value: item.attendeeRole })
+                });
+                $.each($(".newrow"), function (index, item) {
+                    //check = $(item).find("#IpAddress").val() != "" && $(item).find("#roomidselect").val() != "" && $(item).find("#activeselect").val() != "";
+                    data.push({
+                        name: "deviceId", value: $(item).find("#deviceid").html()
+                    });
+                    data.push({
+                        name: "deviceuserId", value: $(item).find(".attendeeselect").val()
+                    });
+                });
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: data
+                }).done(function (result) {
+                    if (result) {
+                        $(AttendeesList).each(function (index, item) {
+                            var title = "دعوة جديدة"
+                            var img = $(".fixedimg").attr("src");
+                            var msg = $(".fixedtextname").html() + " قام بدعوتك إلى أجتماع جديد  "
+                                hub.server.sendNotification(item.userId, msg,title,img);
+
+                            });
+                        window.location.reload();
+                    }
+                        
+                }).fail(function (data) {
+                    // Optionally alert the user of an error here...
+                });
+            } else {
+                var x = document.getElementById("snackbarerror");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            }
+        }
+        let count = 0; // Initialize count to 0
+        function addPerson() {
+            var attendeeName = $("#Attendees option:selected").text();
+            var attendeeUserId = $("#Attendees option:selected").val();
+            var attendeeRole = $("#AttendeeRoleInput option:selected").val();
+            var attendeeOrganization = document.getElementById("attendeeOrganizationInput").value;
+            if (attendeeName && attendeeOrganization && attendeeRole) { // Check if both fields are filled
+                count++; // Increment count
+                const tableBody = document.getElementById("tableBody");
+                const newRow = tableBody.insertRow();
+                // Insert a new row
+                const cell1 = newRow.insertCell(0); // Insert count number cell
+                const cell2 = newRow.insertCell(1); // Insert first name cell
+                const cell3 = newRow.insertCell(2); // Insert first name cell
+                
+                const cell5 = newRow.insertCell(3);
+                const cell4 = newRow.insertCell(4);
+                cell1.innerHTML = AttendeesList.length + 1;
+                cell2.innerHTML = attendeeName;
+                cell3.innerHTML = attendeeOrganization;
+                cell5.innerHTML = $("#AttendeeRoleInput option:selected").text();;
+                cell4.innerHTML = " <a  onclick='DeleteAttendee(this)' data-id='" + attendeeUserId + "' class='btn btn-info btn-danger'>حذف</a>"
+                AttendeesList.push({
+                    "attendeeName": attendeeName, "userId": attendeeUserId, "attendeeOrganization": attendeeOrganization, "attendeeRole": attendeeRole})
+                $("#Attendees").find('option[value="' + attendeeUserId + '"]').hide();
+            }
+
+        }
+        function DeleteAttendee(ele) {
+            $(ele).parent().parent().remove();
+            var userId = $(ele).data("id");
+            $("#Attendees").find('option[value="' + userId + '"]').show();
+            AttendeesList = AttendeesList.filter(function (item) {
+                return item.userId != $(ele).data("id");
+            });
+        }
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        if (ViewBag.Success)
+        {
+            <script>
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+        else
+        {
+
+            <script>
+               
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+    }
+}

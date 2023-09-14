@@ -1,0 +1,94 @@
+﻿@model IEnumerable<WebApplication5.Models.MeetingViewModel>
+@{
+    ViewBag.Title = "الاجتمعات";
+}
+<div id="wrapper">
+    <div class="col-lg-12" style=" margin-top: 4%;">
+        <div class="ibox float-e-margins">
+            <h2 style="text-align: right; "><b>الاجتمعات</b></h2>
+            <br>
+
+            <a asp-action="Add" asp-controller="Room" title="Create new cluster" class="btn btn-primary btn-sm"
+               style="float:left ; margin-left:13px;">
+                <i class="fa fa-plus"></i> <span class="bold">اضافة اجتماع </span>
+            </a>
+
+            <br> <br>
+            <div class="ibox-content" style="margin-right: -56px;">
+                <table class="table table-striped dataTables-example">
+                    <thead>
+                        <span class="material-symbols-outlined" style="float: right; line-height: 32px;">search</span>
+                        <tr>
+                            <th id="nameRoom">موضوع الأجتماع</th>
+                            @*<th id="typeRoom">قاعة الأجتماع</th>*@
+                            <th id="describeRoom"> اللجنة</th>
+
+                            <th id="devices"> نوع الاجتماع </th>
+                            <th id="detailsRoom">التاريخ </th>
+                            <th>الخصائص </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ var count = 1;}
+                        @foreach (var meeting in Model)
+                        {
+                            var idstring = "row" + count;
+                            <tr id="@idstring">
+                                <td id="nameRoom_@idstring">@meeting.meetingSubject </td>
+                                <td id="typeRoom_@idstring">@meeting.boardName </td>
+                                <td id="describeRoom_@idstring"> @meeting.meetingType </td>
+                                <td id="detailsRoom_@idstring">@meeting.meetingDate.ToShortDateString() من @meeting.meetingStartTime الى @meeting.meetingEndTime </td>
+                               
+                                <td>
+                                
+                                    <a class="btn btn-info" href="@Url.Action("Edit","Room", new { Id = meeting.meetingId })" value="">تعديل</a>
+                                    @*<input class="btn btn-info " style=" display: none;" type="button" id="save_button1"
+                                        value="حفظ" onclick="save_row('@room.roomId')">*@
+                                    <a value="" onclick="ShowDeleteModal(@meeting.meetingId,'@Url.Action("Delete", "Room", new { id = meeting.meetingId })')"
+                                       class="btn btn-info btn-danger">حذف</a>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">شاشة تأكيد الحذف </h5>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="" id="dataid" />
+                <input type="hidden" value="" id="dataurl" />
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <p>هل انت متأكد من الحذف  ؟</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="$('#deleteModal').modal('hide')">اغلاق</button>
+                <button type="button" data-id="" class="btn btn-primary" onclick="DeleteData()"  style="margin-top:0">تأكيد</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+
+    <script>
+        function ShowDeleteModal(Id, url) {
+            $('#deleteModal').modal('show')
+            $("#dataid").val(Id);
+            $("#dataurl").val(url);
+        }
+        function DeleteData() {
+            window.location.replace($("#dataurl").val())
+        }
+    </script>
+
+
+}

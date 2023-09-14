@@ -1,0 +1,277 @@
+﻿
+@{
+    ViewBag.Title = "التقارير";
+}
+
+<div id="wrapper" style="margin-right:18px; margin-top:40px;">
+    <h2 class="col-lg-12" style="color: #bba20b; margin-top: 3%;"><span class="material-symbols-outlined"><i class="fa fa-bar-chart-o"> &nbsp;&nbsp;</i></span><b> التقارير </b></h2>
+    <div class="col-lg-12" style=" padding-right: 0;">
+        <div class="col-lg-12" style="padding-right: 0;padding-left:1%;padding-bottom:1%">
+            <div class="col-md-12  " style="padding-right: 0px">
+                <div class="col-lg-12">
+                    <ul class="nav nav-tabs" style=" margin-top: 1%;">
+                        <li class="active">
+                            <a data-toggle="tab" href="clients.html#tab-1" style=" margin-right: 0%;"><i></i>تقارير الإجتماعات</a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="clients.html#tab-2">تقارير المهام</a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="clients.html#tab-3"> تقارير القرارات</a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="clients.html#tab-4"> المرفقات</a>
+                        </li>
+                    </ul>
+                    <br>
+                    <div class="ibox-content" style=" margin-right: 0px; margin-top: -27px;" dir="ltr">
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active ">
+                                <div class="full-height-scroll">
+                                    <div class="row" style=" margin-right: 1px;margin-left: 1px">
+                                        <table id="myTable" class="table table-striped dataTables-example" dir="rtl">
+                                            <thead>
+                                                <span class="material-symbols-outlined" style="float: right; line-height: 32px;">search</span>
+                                                <tr>
+                                                    <th> موضوع الأجتماع</th>
+                                                    <th>رقم </th>
+                                                    <th> قاعة الأجتماع</th>
+                                                   @* <th> المنسق</th>*@
+                                                    <th>اللجنه </th>
+                                                    <th> عدد الحضور</th>
+                                                    <th> التاريخ - الوقت </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>)
+                                                {
+                                                    <tr>
+                                                        <td>@item.meetingSubject</td>
+                                                        <td> @item.meetingNumber</td>
+                                                        <td> @item.roomName</td>
+                                                        @*<td> @item.boardName </td>*@
+                                                        <td>@item.boardName</td>
+                                                        <td> @item.Attendees.Count</td>
+                                                        <td > @item.meetingDate.ToShortDateString()  @item.meetingStartTime  - @item.meetingEndTime</td>
+                                                    </tr>
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="tab-2" class="tab-pane">
+                                <div class="full-height-scroll">
+                                    <div class="row" style=" margin-right: 1px;margin-left: 1px">
+                                        <table id="myTable1" class="table table-striped dataTables-example" dir="rtl">
+                                            <thead>
+                                                <span class="material-symbols-outlined" style="float: right; line-height: 32px;">search</span>
+                                                <tr>
+                                                    <th> أسم المكلف بها</th>
+                                                    <th>رقم الأجتماع</th>
+                                                    <th>عنوان الأجتماع</th>
+
+                                                    <th>عنوان المهمة</th>
+                                                    @*<th> اللجنة المكلفة بها</th>
+        <th> حالة المهمة</th>*@
+                                                    @*<th> بداية المهمة</th>*@
+                                                    <th> نهاية المهمة</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in ViewBag.Tasks as List<Core.Models.TaskViewModel>)
+                                                {
+                                                    var name = (ViewBag.Users as List<Core.Models.UserDropDownViewModel>).Where(x => x.id == item.defermentReason).FirstOrDefault() != null ? (ViewBag.Users as List<Core.Models.UserDropDownViewModel>).Where(x => x.id == item.defermentReason).FirstOrDefault().fullname :"";
+                                                    var meetingnumber = (ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>).Where(x => x.meetingId == item.meetingId).FirstOrDefault() != null ? (ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>).Where(x => x.meetingId == item.meetingId).FirstOrDefault().meetingNumber : "";
+                                                    var meetingname = (ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>).Where(x => x.meetingId == item.meetingId).FirstOrDefault() != null ? (ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>).Where(x => x.meetingId == item.meetingId).FirstOrDefault().meetingSubject : "";
+                                                <tr>
+                                                    <td> @name</td>
+                                                    <td> @meetingnumber</td>
+                                                    <td> @meetingname</td>
+
+                                                    <td>@item.notes</td>
+
+                                                    @*<td label> 2023-3-14 &nbsp; 1:30pm</label></td>*@
+                                                    <td>@item.expectedCompletionDate.ToShortDateString()</td>
+                                                </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-3" class="tab-pane">
+                                <div class="full-height-scroll">
+                                    <div class="row" style=" margin-right: 1px ;margin-left: 1px">
+                                        <table id="myTable2" class="table table-striped dataTables-example" dir="rtl">
+                                            <thead>
+                                                <span class="material-symbols-outlined" style="float: right; line-height: 32px;">search</span>
+                                                <tr>
+                                                    <th> عنوان القرار</th>
+                                                    <th>عنوان الأجتماع</th>
+                                                    <th>رقم الأجتماع</th>
+                                                    @*<th></th>*@
+                                                    @* <th> اللجنة الصادرة منها </th>*@
+                                                    <th> بداية اصدار القرار</th>
+                                                    <th> بداية تنفيذ القرار</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in ViewBag.Decisions as List<Core.Models.DecisionViewModel>)
+                                                {
+                                                    var meetingnumber = (ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>).Where(x => x.meetingId == item.meetingId).FirstOrDefault() != null ? (ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>).Where(x => x.meetingId == item.meetingId).FirstOrDefault().meetingNumber : "";
+                                                    var meetingname = (ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>).Where(x => x.meetingId == item.meetingId).FirstOrDefault() != null ? (ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>).Where(x => x.meetingId == item.meetingId).FirstOrDefault().meetingSubject : "";
+
+                                                <tr>
+                                                    <td> @item.title</td>
+                                                    <td> @meetingname</td>
+                                                    <td> @meetingnumber</td>
+                                                    @*<td>عامة</td>
+        <td> لجنة عامة</td>*@
+                                                    <td> @item.createdDate.ToShortDateString()</td>
+                                                    <td> @item.startDate.ToShortDateString()</td>
+                                                </tr>
+                                                }
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-4" class="tab-pane">
+                                <div class="full-height-scroll">
+                                    <div class="row" style=" margin-right: 1px;margin-left: 1px">
+                                        <table id="myTable3" class="table table-striped dataTables-example" dir="rtl">
+                                            <thead>
+                                                <span class="material-symbols-outlined" style="float: right; line-height: 32px;">search</span>
+                                                <tr>
+                                                    <th>رقم الأجتماع </th>
+                                                    <th>عنوان الأجتماع</th>
+                                                    <th> المرفقات</th>
+                                                    @*<th> @* </th>*@
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in ViewBag.Amenity as List<Core.Models.AmenityViewModel>)
+                                                {
+                                                    var meetingnumber = (ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>).Where(x => x.meetingId == Convert.ToInt32(item.amenityIcon)).FirstOrDefault() != null ? (ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>).Where(x => x.meetingId == Convert.ToInt32(item.amenityIcon)).FirstOrDefault().meetingNumber : "";
+                                                    var meetingname = (ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>).Where(x => x.meetingId == Convert.ToInt32(item.amenityIcon)).FirstOrDefault() != null ? (ViewBag.Meetings as List<WebApplication5.Models.MeetingViewModel>).Where(x => x.meetingId == Convert.ToInt32(item.amenityIcon)).FirstOrDefault().meetingSubject : "";
+
+                                                <tr>
+                                                    <td> @meetingnumber</td>
+                                                    <td> @meetingname</td>
+                                                    <td>
+                                                        <a class="aarchives" href="../../Content/Uploads/@item.amenityName"
+                                                           style="color: #bba20b;">@item.amenityName</a>
+                                                    </td>
+                                                </tr>
+                                                }
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br><br>
+@section scripts{
+        <script>
+            Table = $('#table-striped dataTables-example').DataTable();
+            $('#search-addon').keyup(function () {
+                Table.search($(this).val()).draw();
+            })
+            function myFunction() {
+                // Declare variables
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+
+                // Loop through all table rows, and hide those who don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[0];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+            function myFunction1() {
+                // Declare variables
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput1");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable1");
+                tr = table.getElementsByTagName("tr");
+
+                // Loop through all table rows, and hide those who don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[0];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+            function myFunction2() {
+                // Declare variables
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput2");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable2");
+                tr = table.getElementsByTagName("tr");
+
+                // Loop through all table rows, and hide those who don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[0];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+            function myFunction3() {
+                // Declare variables
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput3");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable3");
+                tr = table.getElementsByTagName("tr");
+
+                // Loop through all table rows, and hide those who don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[0];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+        </script>
+    }

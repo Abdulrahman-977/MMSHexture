@@ -1,0 +1,309 @@
+﻿@model Core.Models.UpdateUserProfileViewModel
+@{
+
+    ViewBag.Title = "تغيير معلومات المستخدم";
+}
+<style>
+    form{
+        margin-bottom:20px;
+    }
+</style>
+<div id="wrapper">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-12">
+            <h2 class="col-lg-12" style="padding: 10px; padding-right: 0; color: #bba20b; margin-inline: -41px;">
+                <span class="material-symbols-outlined">groups_3</span><b> &nbsp; تغيير معلومات المستخدم </b>
+            </h2>
+            <br>
+        </div>
+        <div class="row" >
+            <div class="col-lg-12">
+                <div class="clients-listreport" style="margin-right:0%; width: 100%;">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="clients.html#tab-1"
+                               style="border-top-color: black; border-right-color: black;margin-right:0%;">
+                                <span class="material-symbols-outlined" style="font-size:12px">text_to_speech</span>
+                                معلومات المستخدم
+                            </a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="clients.html#tab-2"
+                               style="border-top-color: black;border-left-color: black;border-right-color: black;margin-right:0%;">
+                                <span class="material-symbols-outlined" style="font-size:12px">groups</span> كلمة المرور
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="row wrapper border-bottom white-bgpage-heading"
+                         style="margin-left:27px;margin-top:40px;">
+                        @using (Html.BeginForm("Edit", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <div class="tab-content ">
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="full-height-scroll">
+                                        <div class="row" style="margin-right: 2px; margin-left: 23px;">
+
+                                            <input type="hidden" value="@Model.userId" name="userId" id="userId" />
+                                            <div class="row col-lg-6" style="margin-right:-182px;">
+                                                <div class="form-group">
+                                                    <label>الاسم *:</label>
+                                                    <input name="fullname" value="@Model.fullname" id="fullname" type="text" class="form-control" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>رقم الجوال</label>
+                                                    <input name="mobile" value="@Model.mobile" id="mobile" type="text" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>الصلاحيات *:</label>
+                                                    <select name="role" required id="role" class="form-control m-b ">
+                                                        @if (Model.role== "Admin")
+                                                        {
+                                                            <option value="">الرجاء اختيار الصلاحيات</option>
+                                                            <option value="Admin" selected>ادمن </option>
+                                                            <option value="Director">مدير </option>
+                                                            <option value="SystemDirector">مدير نظام</option>
+                                                            <option value="SimpleUser">موظف </option>
+                                                        }
+                                                        else if (Model.role == "Director")
+                                                        {
+                                                            <option value="">الرجاء اختيار الصلاحيات</option>
+                                                            <option value="Admin">ادمن </option>
+                                                            <option value="Director" selected>مدير </option>
+                                                            <option value="SystemDirector">مدير نظام</option>
+                                                            <option value="SimpleUser">موظف </option>
+                                                        }
+                                                        else if (Model.role == "SystemDirector")
+                                                        {
+                                                            <option value="">الرجاء اختيار الصلاحيات</option>
+                                                            <option value="Admin">ادمن </option>
+                                                            <option value="Director">مدير </option>
+                                                            <option value="SystemDirector" selected>مدير نظام</option>
+                                                            <option value="SimpleUser">موظف </option>
+                                                        }
+                                                        else if (Model.role == "SimpleUser")
+                                                        {
+                                                            <option value="">الرجاء اختيار الصلاحيات</option>
+                                                            <option value="Admin">ادمن </option>
+                                                            <option value="Director">مدير </option>
+                                                            <option value="SystemDirector">مدير نظام</option>
+                                                            <option value="SimpleUser" selected>موظف </option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="" selected>الرجاء اختيار الصلاحيات</option>
+                                                            <option value="Admin">ادمن </option>
+                                                            <option value="Director">مدير </option>
+                                                            <option value="SystemDirector">مدير نظام</option>
+                                                            <option value="SimpleUser" >موظف </option>
+                                                        }
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                                    <div class="row col-lg-6" style="margin-right:-182px;">
+
+                                                        <div class="form-group">
+                                                            <label>المسمى الوظيفي *:</label>
+                                                            <input name="title" id="title" value="@Model.title" type="text" class="form-control" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>الجنس</label>
+                                                            <select name="gender" id="gender" class="form-control m-b ">
+                                                                ]@if (Model.gender == "ذكر")
+                                                                {
+                                                                    <option value="">الرجاء اختيار الجنس</option>
+
+                                                                    <option value="ذكر" selected>ذكر</option>
+                                                                    <option value="انثى">انثى</option>
+                                                                }
+                                                                else if (Model.gender == "انثى")
+                                                                {
+                                                                    <option value="">الرجاء اختيار الجنس</option>
+                                                                    <option value="ذكر">ذكر</option>
+                                                                    <option value="انثى" selected>انثى</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="" selected>الرجاء اختيار الجنس</option>
+                                                                    <option value="ذكر">ذكر</option>
+                                                                    <option value="انثى">انثى</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+
+                                                            <label>تغير صورة الملف الشخصي </label>
+
+                                                            <input class="form-control" type="file" id="files" name="files" multiple="multiple" style="width: 80%;">
+
+                                                        </div>
+                                                   
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-2" class="tab-pane">
+
+                                    <div class="full-height-scroll">
+                                        <div class="row">
+                                            <div class="row col-lg-6" style="margin-right:-182px;">
+                                                <div class="form-group">
+                                                    <label>كلمة المرور القديمة *:</label>
+                                                    <input name="oldPassword" id="oldPassword" type="password" class="form-control" >
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>كلمة المرور الجديدة *:</label>
+                                                    <input name="newPassword" id="newPassword" type="password" class="form-control">
+                                                    <span id="errorpassword" style="display:none;color: red;
+    font-size: 7px;
+    font-weight: bold;">كلمة المرور يجب ان تحتوي على 8 ارقام و حروف كبيرة و صغيرة و على أي من الرموز الخاصة</span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>تاكيد كلمة المرور *:</label>
+                                                    <input name="confirmPassword" id="confirmPassword" type="password" class="form-control">
+                                                    <span id="errorconfirmpassword" style="display:none;color: red;
+    font-size: 7px;
+    font-weight: bold;">كلمة المرور و تاكيد كلمة المرور غير متطابقان</span>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+
+                            </div>
+
+                            <a href="@Url.Action("Index","Users")" class="btn btn-primary" style="float:left ; margin-left:13px;"> <span class="bold">رجوع الى القائمة</span></a>
+                            <button id="submitBtn" type="submit" class="btn btn-primary">إرسال</button>
+                        }
+                    </div>
+                
+                </div>
+            </div>
+           
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $('#oldPassword').bind('input', function () {
+            if ($('#oldPassword').val() != "") {
+                $('#oldPassword').attr("required", "required")
+                $('#confirmPassword').attr("required", "required")
+                $('#newPassword').attr("required", "required")
+            } else if ($("#newPassword").val() == "" && $("#confirmPassword").val() == "") {
+                $('#oldPassword').removeAttr("required")
+                $('#confirmPassword').removeAttr("required")
+                $('#newPassword').removeAttr("required")
+                $('#submitBtn').removeAttr("disabled");
+                $("#errorpassword").hide()
+                $("#errorconfirmpassword").hide()
+            }
+        });
+        $('#newPassword').bind('input', function () {
+            if ($('#newPassword').val() != "") {
+                $('#oldPassword').attr("required", "required")
+                $('#confirmPassword').attr("required", "required")
+                $('#newPassword').attr("required", "required")
+            } else if ($("#oldPassword").val() == "" && $("#confirmPassword").val() == "") {
+                $('#oldPassword').removeAttr("required")
+                $('#confirmPassword').removeAttr("required")
+                $('#newPassword').removeAttr("required")
+                $('#submitBtn').removeAttr("disabled");
+                $("#errorpassword").hide()
+                $("#errorconfirmpassword").hide()
+            }
+        });
+        $('#confirmPassword').bind('input', function () {
+            if ($('#newPassword').val() != "") {
+                $('#oldPassword').attr("required", "required")
+                $('#confirmPassword').attr("required", "required")
+                $('#newPassword').attr("required", "required")
+            } else if ($("#oldPassword").val() == "" && $("#newPassword").val() == "") {
+                $('#oldPassword').removeAttr("required")
+                $('#confirmPassword').removeAttr("required")
+                $('#newPassword').removeAttr("required")
+                $('#submitBtn').removeAttr("disabled");
+                $("#errorpassword").hide()
+                $("#errorconfirmpassword").hide()
+            }
+        });
+        var check = false;
+        var confirmcheck = false;
+        $("#newPassword").change(function () {
+            const regex = new RegExp("^(?=.*?[A-Z])(?=(.*[a-z]))(?=(.*[\\d]))(?=(.*[^a-zA-Z0-9])).{8,}$", 'g')
+            const str = $(this).val();
+            let m;
+
+            while ((m = regex.exec(str)) !== null) {
+                // This is necessary to avoid infinite loops with zero-width matches
+                if (m.index === regex.lastIndex) {
+                    regex.lastIndex++;
+                }
+                if (m.length != 0) {
+                    $("#errorpassword").hide()
+                    check = true;
+                    $('#submitBtn').removeAttr("disabled");
+                } else {
+                    $("#errorpassword").show()
+                }
+                // The result can be accessed through the `m`-variable.
+                m.forEach((match, groupIndex) => {
+                    console.log(`Found match, group ${groupIndex}: ${match}`);
+                });
+            }
+            if (!check) {
+                $("#errorpassword").show()
+                $("#submitBtn").attr("disabled", "disabled")
+            }
+            if ($("#confirmPassword").val() != "") {
+                if ($(this).val() == $("#confirmPassword").val()) {
+                    confirmcheck = true;
+                    $("#errorconfirmpassword").hide()
+                    $('#submitBtn').removeAttr("disabled");
+                } else {
+                    confirmcheck = false;
+                    $("#errorconfirmpassword").show()
+                    $("#submitBtn").attr("disabled", "disabled")
+                }
+            }
+
+        });
+        $("#confirmPassword").change(function () {
+            if ($(this).val() == $("#newPassword").val()) {
+                confirmcheck = true;
+                $("#errorconfirmpassword").hide()
+                $('#submitBtn').removeAttr("disabled");
+            } else {
+                confirmcheck = false;
+                $("#errorconfirmpassword").show()
+                $("#submitBtn").attr("disabled", "disabled")
+            }
+        });
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        if (ViewBag.Success)
+        {
+            <script>
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+        else
+        {
+
+            <script>
+
+                var x = document.getElementById("snackbarerrorrequest");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+    }}

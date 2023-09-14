@@ -1,0 +1,218 @@
+﻿@model IEnumerable<Core.Models.Meeting>
+@{
+    ViewBag.Title = "التقويم";
+}
+
+<div id="wrapper" style="margin-right:18px; margin-top:40px;">
+    <h2 class="col-lg-10" style="color: #bba20b; margin-inline: -39px; margin-top: 3%;"><span class="material-symbols-outlined"><i class="fa fa-table"></i></span><b> التقويم </b></h2>
+    <div class="ibox-content" style="margin-left:50px;margin-right:185px ;margin-bottom: 7%;">
+        <div class="row" style="color: #bba20b; margin-top: 1%; margin-inline: -229px; margin-bottom: 1%;">
+            <div class="col-lg-10" style="color: #bba20b; ">
+                <span class="material-symbols-outlined">reorder</span><b> قائمة الأجتماعات </b>
+            </div>
+        </div>
+        <div class="row">
+
+            <div id='external-events' class="col-lg-12" style="padding-right: 10px;padding-bottom: 25px;/* margin-right: -212px; */padding-top: 10px;">
+                @*<div class="col-lg-1" style="padding-right:15px">
+                    <label style="margin-top:5px">القاعة</label>
+                </div>
+                <div class="col-lg-4"  style="padding-right:15px" >
+                    <select class="form-control" id="roomid" name="roomid">
+                        <option value="0" selected>الرجاء اختيار القاعة</option>
+                        @foreach (var room in ViewBag.Rooms as List<Core.Models.RoomViewModel>)
+                        {
+                            <option value="@room.roomId">@room.roomName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-1"  style="padding-right:15px">
+                    <label style="margin-top:5px">اللجنة</label>
+                </div>
+
+                <div class="col-lg-4"  style="padding-right:15px">
+                    <select class="form-control" id="boardid" name="boardid">
+                        <option value="0" selected>الرجاء اختيار اللجنة</option>
+                        @foreach(var board in ViewBag.Boards as List<Core.Models.BoardViewwModel>)
+                        {
+                            <option value="@board.boardId">@board.boardName</option>
+                        }
+                    </select>
+                </div>*@
+                @*<div class="col-lg-1" style="padding-right:15px">
+                    <label style="margin-top:5px">الاجتماع</label>
+                </div>
+                <div class="col-lg-3"  style="padding-right:15px">
+                    <select class="form-control"></select>
+                    </div>
+                </div>*@
+                <div class="col-lg-12" style="PADDING: 0;/* margin-right:-205px; */width: 100%;">
+                    <div class="ibox-content">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+
+<!--  scripts -->
+
+
+
+
+@section scripts{
+    <script src="~/Content/js/inspinia.js"></script>
+    <script src="~/Content/js/plugins/pace/pace.min.js"></script>
+    <script src="~/Content/js/plugins/fullcalendar/moment.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Content/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/Content/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- iCheck -->
+    <script src="~/Content/js/plugins/iCheck/icheck.min.js"></script>
+    <!-- Full Calendar -->
+    <script src="~/Content/js/plugins/fullcalendar/fullcalendar.min.js"></script>
+    <script>
+        
+        var events = [];
+    </script>
+    @foreach (var meeting in Model)
+    {
+        var color = "green";
+        var date = meeting.meetingDate.ToShortDateString() + " " + meeting.meetingEndTime;
+        var meetingdate = Convert.ToDateTime(date);
+        TimeSpan duration = meetingdate - DateTime.Now;
+        var endtime = (duration.TotalSeconds == 0 || duration.TotalSeconds < 0);
+        var start = meeting.meetingDate.ToString("yyyy-MM-dd") + "T" + meeting.meetingStartTime;
+        var end = meeting.meetingDate.ToString("yyyy-MM-dd") + "T" + meeting.meetingEndTime;
+        if (meeting.meetingStatus == 2)
+        {
+            color = "blue";
+        }
+        else if (endtime || meeting.meetingStatus == 3)
+        {
+            color = "orange";
+        }
+        else if (meeting.meetingStatus == 4)
+        {
+            color = "red";
+        }
+        <script>
+                    var event = { title: "@meeting.meetingSubject", start: "@start", end :"@end",color : "@color", roomid : @meeting.roomId, boardid : @meeting.boardId };
+                    events.push(event)
+        </script>
+    }
+
+
+    <script>
+        var selectorroom = document.getElementById('#roomid');
+        var selectorboard = document.getElementById('#boardid');
+        
+        $(document).ready(function () {
+
+            $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            /* initialize the external events
+             -----------------------------------------------------------------*/
+            $('#external-events div.external-event').each(function () {
+
+                $(this).data('event', {
+            title: $.trim($(this).text()),
+                    stick: true
+                });
+
+                $(this).draggable({
+            zIndex: 1111999,
+                    revert: true,
+                    revertDuration: 0
+                });
+
+        });
+        //    $('#external-events div.external-event').each(function () {
+
+        //        $(this).data('event', {
+        //    title: $.trim($(this).text()),
+        //            stick: true // maintain when user navigates (see docs on the renderEvent method)
+        //        });
+
+        //        $(this).draggable({
+        //    zIndex: 1111999,
+        //            revert: true,
+        //            revertDuration: 0
+        //        });
+
+        //});
+
+        /* initialize the calendar
+        -----------------------------------------------------------------*/
+
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+            let calendar = $('#calendar').fullCalendar({
+                eventDidMount: function (arg) {
+                    let valroom = selectorroom.value;
+                    let valboard = selectorboard.value;
+                    if (!(valroom == arg.event.extendedProps.roomid || valroom == "0") && !(valboard == arg.event.extendedProps.boardid || valboard == "0")) {
+                        arg.el.style.display = "none";
+                    }
+                },
+        header: {
+            left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                editable: false,
+                droppable: false, // this allows things to be dropped onto the calendar
+                drop: function () {
+                // is the "remove after drop" checkbox checked?
+                if ($('#drop-remove').is(':checked')) {
+                        // if so, remove the element from the "Draggable Events" list
+                        $(this).remove();
+                }
+            },
+                events: events,
+            });
+    });
+        $("#roomid").on("change", function () {
+            var eventss = [];
+            eventss.push(events[0])
+            if ($("#roomid").val() != "0") {
+                $("#calendar").fullCalendar('removeEvents');
+                $('#calendar').fullCalendar({
+                    eventDidMount: function (arg) {
+                        let valroom = selectorroom.value;
+                        let valboard = selectorboard.value;
+                        if (!(valroom == arg.event.extendedProps.roomid || valroom == "0") && !(valboard == arg.event.extendedProps.boardid || valboard == "0")) {
+                            arg.el.style.display = "none";
+                        }
+                    },
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
+                    },
+                    editable: false,
+                    droppable: false, // this allows things to be dropped onto the calendar
+                    drop: function () {
+                        // is the "remove after drop" checkbox checked?
+                        if ($('#drop-remove').is(':checked')) {
+                            // if so, remove the element from the "Draggable Events" list
+                            $(this).remove();
+                        }
+                    },
+                    events: events,
+                });
+           
+            }
+            $("#calendar").fullCalendar('renderEvents');
+        });
+      
+    </script>
+
+}

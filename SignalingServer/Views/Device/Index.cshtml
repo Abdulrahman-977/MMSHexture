@@ -1,0 +1,238 @@
+﻿@model IEnumerable<WebApplication5.Models.DeviceViewModel>
+@{
+    ViewBag.Title = "أجهزة القاعة";
+}
+<div id="wrapper">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-12" style="padding-right:204px">
+            <div class="ibox float-e-margins">
+                <h2 class="col-lg-10" style="padding: 10px;
+    padding-right: 0;
+    color: #F1A13B;
+    margin-inline: -41px;">
+                    <span class="material-symbols-outlined">check_box_outline_blank</span><b>أجهزة الاجتماع </b>
+                </h2>
+                <br>
+                <div class="col-lg-12" style="margin-right: -50px;padding: 0;border: 1px solid #eee;height: 130px;padding: 10px;margin-left: -51px;margin-bottom: 17px;">
+                    <div class="ibox float-e-margins">
+                        <div class="col-lg-12" style="padding-right: 5px;">
+                            <label>الاجتماع</label>
+                            <select class="form-control" id="meetingSelect" style="
+    width: 50%;
+">
+                                <option value="">الرجاء اختيار الاجتماع</option>
+                                @foreach (var meeting in ViewBag.Meetings as List<Core.Models.Meeting>)
+                                {
+                                    <option value="@meeting.meetingId">@meeting.meetingSubject</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-lg-12" style="PADDING: 0;padding-left: 10px;/* text-align: right; */padding-top: 10px;">
+                            <button class="btn btn-success" onclick="SearchDevices()">بحث</button>
+                        </div>
+
+                    </div>
+                </div>
+                <hr />
+
+
+                <div class="ibox-content" style="margin-right: -56px;border:none">
+                    @*<table class="table table-striped dataTables-example">
+                <thead>
+                    <tr>
+                        <th>الجهاز</th>
+                        <th>IP </th>
+
+                        <th>الغرفة </th>
+                        <th>اسم الشخص</th>
+                        <th>حالة الجهاز</th>
+                        <th>الخصائص </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @foreach (var device in Model)
+                    {
+                        <tr>
+                            <td>  <img class="fixedimg2" src="../Content/img/5234658.png" height="37px" width="50px"></td>
+                            <td>
+                                @device.ipAddress
+
+                            </td>
+                            <td>
+                                @device.roomName
+
+
+                            </td>
+                            <td>
+                                <select class="input-sm form-control input-s-sm inline" style="width:35%; height: 34px;line-height: 30px;font-size: 10px; float: right;font-weight: bold;">
+                                    <option value="0">بحث عن طريق</option>
+                                    <option value="1"> الاسم</option>
+                                    <option value="2"> البريد الألكتروني</option>
+                                    <option value="3"> رقم الجوال</option>
+                                    <option value="4"> الرقم الوظيفي</option>
+                                </select>
+
+                                <select id="" class="input-sm form-control input-s-sm inline attendeeselect" style="height: 34px;line-height: 30px;font-size: 10px;float: right;font-weight: bold;width: 50%;margin-right: 10px;">
+                                    <option value="@device.userId" selected>@device.UserName</option>
+                                </select>
+                            </td>
+
+                            @if (device.isActive)
+                            {
+                                <td>
+                                    <select class="form-control">
+                                        <option value="1" selected>مفعل</option>
+                                        <option value="0">غير مفعل</option>
+                                    </select>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <select class="form-control">
+                                        <option value="1">مفعل</option>
+                                        <option value="0" selected>غير مفعل</option>
+                                    </select>
+                                </td>
+                            }
+                            <td>
+                                <a class="btn btn-info" href="javascript:" onclick="UpdateDevice()" dta-id="@device.deviceId">تسجيل</a>
+                                <a value="" onclick="ShowDeleteModal(@device.deviceId,'@Url.Action("Delete", "Device", new { id = device.deviceId})')"
+                                   class="btn btn-info btn-danger">حذف</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>*@
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">شاشة تأكيد الحذف </h5>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="" id="dataid" />
+                <input type="hidden" value="" id="dataurl" />
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <p>هل انت متأكد من الحذف  ؟</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="$('#deleteModal').modal('hide')">اغلاق</button>
+                <button type="button" data-id="" class="btn btn-primary" onclick="DeleteData()" style="margin-top:0">تأكيد</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.8.24/jquery-ui.min.js" type="text/javascript"></script>
+    <link href="http://code.jquery.com/ui/1.8.24/themes/blitzer/jquery-ui.css" rel="stylesheet"
+          type="text/css" />
+
+    <script>
+        var rowtodelete
+        ////var users = ViewBag.Users
+        function ShowDeleteModal(Id,url, ele) {
+            rowtodelete = ele;
+            $('#deleteModal').modal('show')
+            $("#dataid").val(Id);
+            $("#dataurl").val(url);
+        }
+        function addrow() {
+            var template = $("#emptyrow").html();
+            $("table").find("tbody").append("<tr class='newrow'>" + template + "</tr>");
+            $.each(users, function (index, item) {
+                $(".newrow").find(".attendeeselect").append("<option id='" + item.userId + "'>" + item.attendeeName + "</option>")
+        });
+        }
+        function DeleteData() {
+            $.ajax({
+                url: $("#dataurl").val(),
+                method: "Get",
+               
+                success: function (result) {
+                    $(rowtodelete).parent().parent().remove();
+                }
+            });
+
+        }
+           
+       var users  
+        function SearchDevices() {
+           
+            $.ajax({
+                url: "../Device/Search",
+                method: "POST",
+                data: { meetingId: $("#meetingSelect").val(), roomId: 0 },
+                success: function (result) {
+                    $(".ibox-content").html(result)
+                    $.ajax({
+                        url: "../Meeting/GetApprovedAttendee",
+                        method: "GET",
+                        data: { meetingId: $("#meetingSelect").val(), roomId: 0 },
+                        success: function (result) {
+                            $(".newrow").find(".attendeeselect").append("<option value='' >بحث وأختيار المدعوين</option>")
+                            users = result;
+                            $.each(users, function (index, item) {
+                                $(".newrow").find(".attendeeselect").append("<option value='" + item.userId + "'>" + item.attendeeName + "</option>")
+                            });
+
+                        }
+                    });
+                   
+                }
+            });
+        }
+        function deletenewrow(ele) {
+            $(ele).parent().parent().remove();
+        }
+        function AddDevice() {
+            var data = []
+                $.each($(".newrow"), function (index, item) {
+                    data.push({
+                        "deviceId": $(item).find("#deviceid").html(),
+                        "ipAddress": $(item).find("#IpAddress").val(), "isTouchScreen": true, "roomId": $("#roomid").val(), "userId": $(item).find(".attendeeselect").val(), "isActive": $(item).find("#activeselect").val() })
+                });
+               
+            $.ajax({
+                url: "../Device/AddDevice",
+                method: "Post",
+                data: { list: data, meetingId: $("#meetingSelect").val() },
+                success: function (result) {
+                    $(".ibox-content").html(result)
+                    $.ajax({
+                        url: "../Meeting/GetApprovedAttendee",
+                        method: "GET",
+                        data: { meetingId: $("#meetingSelect").val(), roomId: 0 },
+                        success: function (result) {
+                            //$(".newrow").find(".attendeeselect").append("<option value='' selected>بحث وأختيار المدعوين</option>")
+                            users = result;
+                            $.each(users, function (index, item) {
+                                $(".newrow").find(".attendeeselect").append("<option value='" + item.userId + "'>" + item.attendeeName + "</option>")
+                            });
+
+                        }
+                    });
+                    
+                        var x = document.getElementById("snackbar");
+                        // Add the "show" class to DIV
+                        x.className = "show";
+                    // After 3 seconds, remove the show class from DIV
+                        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+                }
+            });
+        }
+        
+    </script>
+
+
+}

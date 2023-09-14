@@ -1,0 +1,70 @@
+﻿@model Core.Models.Device
+@{
+    ViewBag.Title = "إضافة جهاز";
+}
+<div id="wrapper">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 style="text-align: right; "><b> إنشاء قاعة أجتماع جديدة</b></h2>
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-lg-11">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <form id="form" method="post" enctype="multipart/form-data">
+                            <div id="step1" style="display:block;">
+                                <h1 style="color: #406847;">معلومات قاعة الأجتماع</h1>
+                                <fieldset>
+
+                                    <div class="row col-lg-12" style="margin-right:-182px;">
+                                        <div class="form-group">
+                                            <label>رقم ال IP </label>
+                                            <input name="ipAddress" id="ipAddress" type="text" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label> غرفة الاجتماعات  </label>
+                                            <select name="roomId" id="roomId" class="form-control m-b " required>
+                                                @foreach (var room in ViewBag.Rooms as List<Core.Models.RoomViewModel>)
+                                                {
+                                                    <option value="@room.roomId">@room.roomName</option>
+                                                }
+
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label> اسم الشخص  </label>
+                                            <select name="userId" id="userId" class="form-control m-b " >
+                                                <option value="">الرجاء اختيار الشخص</option>
+                                                @foreach (var user in ViewBag.Users as List<Core.Models.UserDropDownViewModel>)
+                                                {
+                                                    <option value="@user.id">@user.fullname</option>
+                                                }
+
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>
+                                                الحالة
+                                            </label>
+                                            <select name="isActive" id="isActive" class="form-control m-b " required>
+                                                <option value="true">مفعل</option>
+                                                <option value="false">غير مفعل</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <a href="@Url.Action("Index","Device")" class="btn btn-primary" style="float:left ; margin-left:13px;"> <span class="bold">رجوع الى القائمة</span></a>
+                            <button id="submitBtn" type="submit" class="btn btn-primary">إرسال</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+}

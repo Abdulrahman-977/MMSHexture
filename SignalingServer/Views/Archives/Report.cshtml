@@ -1,0 +1,359 @@
+﻿@model WebApplication5.Models.MeetingAttendeeViewModel
+@{
+    ViewBag.Title = "تقرير الأجتماع";
+}
+
+<div id="wrapper">
+    <div class="row wrapper border-bottom white-bgpage-heading"
+         style="margin-right:178px;margin-left:27px;margin-top:40px;">
+        <div class="card">
+            <h2 class="col-lg-10" style="color: #bba20b; margin-inline: -225px; margin-top: 3%;">
+                <span class="material-symbols-outlined">check_box_outline_blank</span><b>تقرير الأجتماع </b>
+            </h2>
+            <!-- <h2 style="text-align: right; "><b>معلومات الاجتماع</b></h2> -->
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-lg-6" style="margin-right:-210px;">
+                        <label class="control-label">موضوع الأجتماع</label>
+                        <input type="text" readonly value="@Model.meeting.meetingSubject" placeholder="الموضوع" class="form-control">
+                    </div>
+                    <div class="col-lg-6" id="data_1" style="margin-right:-210px;">
+                        <label class=" control-label">تاريخ الأجتماع</label>
+                        <input type="date" readonly id="datepicker" value="@Model.meeting.meetingDate.ToString("yyyy-MM-dd")" class="form-control">
+                    </div>
+                    <div class="col-lg-6" id="data_1" style="margin-right:-210px;">
+                        <label readonly class="control-label">قاعة الاجتماع</label>
+                        <input type="text" readonly placeholder="قاعة الاجتماع"  value="@Model.roomname" class="form-control">
+                    </div>
+                    <div class="col-lg-6" id="data_1" style="margin-right:-210px;">
+                        <label class=" control-label">الرقم المرجعي</label>
+                        <input type="text" readonly placeholder="الرقم" value="@Model.meeting.meetingNumber" class="form-control">
+                    </div>
+                    <div class="col-lg-6" id="data_1" style="margin-right:-210px;">
+                        <label class=" control-label">وقت بداية الأجتماع</label>
+                        <input type="time" readonly placeholder="أسم اللجنة" value="@Model.meeting.meetingStartTime" class="form-control">
+                    </div>
+                    <div class="col-lg-6" id="data_1" style="margin-right:-210px;">
+                        <label class=" control-label">وقت نهاية الأجتماع</label>
+                        <input type="time" readonly placeholder="أسم اللجنة" value="@Model.meeting.meetingEndTime" class="form-control">
+                    </div>
+                    <div class="col-lg-6" id="data_1" style="margin-right:-210px;">
+                        <label class=" control-label">اللجنة</label>
+                        <input type="text" readonly placeholder="أسم اللجنة" value="@Model.boardname" class="form-control">
+                    </div>
+                    <div class="col-lg-9" id="data_1" style="margin-right:-210px; ">
+                        <label class=" control-label">
+                            الملاحظات حول الأجتماع
+                        </label>
+                        <textarea class="form-control" readonly id="VisitReport" cols="9" rows="1"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="card">
+            <div class="clients-listreport" style="margin-right:0%; width: 100%;">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="clients.html#tab-1"
+                           style="border-top-color: black; border-right-color: black;margin-right:0%;">
+                            <span class="material-symbols-outlined" style="font-size:12px">text_to_speech</span>
+                            المتحدثون
+                        </a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="clients.html#tab-2"
+                           style="border-top-color: black;border-left-color: black;border-right-color: black;margin-right:0%;">
+                            <span class="material-symbols-outlined" style="font-size:12px">groups</span> المدعوين
+                        </a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="clients.html#tab-3"
+                           style="border-top-color: black; border-left-color: black;margin-right:0%;">
+                            <span class="material-symbols-outlined" style="font-size:12px">attach_email</span> المرفقات
+                        </a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="clients.html#tab-4"
+                           style="border-top-color: black; border-left-color: black;margin-right:0%;">
+                            <span class="material-symbols-outlined" style="font-size:12px">attach_email</span> القرارات
+                        </a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="clients.html#tab-5"
+                           style="border-top-color: black; border-left-color: black;margin-right:0%;">
+                            <span class="material-symbols-outlined" style="font-size:12px">attach_email</span> المهام
+                        </a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="clients.html#tab-6"
+                           style="border-top-color: black; border-left-color: black;margin-right:0%;">
+                            <span class="material-symbols-outlined" style="font-size:12px">attach_email</span> التصويت
+                        </a>
+                    </li>
+                </ul>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="tab-content ">
+                            <div id="tab-1" class="tab-pane active">
+                                <div class="full-height-scroll">
+                                    <div class="row" style="margin-right: 23px; margin-left: 23px;">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>أسم المتحدث</th>
+                                                        <th>الموضوع</th>
+                                                        <th>مدة التحدث</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{ var count = 1;}
+                                                    @foreach (var speaker in Model.Speakers)
+                                                    {
+                                                        var name = Model.Attendees.Where(x => x.meetingAttendeeId == speaker.meetingAttendeeId).FirstOrDefault().attendeeName;
+                                                        <tr>
+                                                            <td>@count</td>
+                                                            <td>@name</td>
+                                                            <td>@speaker.subject</td>
+                                                            <td>@speaker.time</td>
+                                                        </tr>
+                                                        count += 1;
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-2" class="tab-pane">
+                                <div class="full-height-scroll">
+                                    <div class="row" style="margin-right: 23px; margin-left: 23px;">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>الأسم</th>
+                                                    <th>تصنيف المستخدم</th>
+                                                    <th>دور المستخدم</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{ var count2 = 1;}
+                                                @foreach (var attendee in Model.Attendees)
+                                                {
+                                                    <tr>
+                                                        <td>@count2</td>
+                                                        <td>@attendee.attendeeName</td>
+                                                        <td>@attendee.attendeeOrganization</td>
+                                                        @if (attendee.attendeeRole == 1)
+                                                        {
+                                                            <td>منسق</td>
+                                                        }
+                                                        else if (attendee.attendeeRole == 2)
+                                                        {
+                                                            <td>عضو</td>
+                                                        }
+                                                    </tr>
+                                                    count += 1;
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-3" class="tab-pane">
+                                <div class="full-height-scroll">
+                                    <div class="row" style="margin-right: 23px; margin-left: 23px;">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>الأسم</th>
+                                                    <th>المرفق</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{ int count4 = 1;}
+                                                @foreach (var file in ViewBag.Amenities as List<Core.Models.AmenityViewModel>)
+                                                {
+                                                    <tr>
+                                                        <td>@count4</td>
+                                                        <td>@file.amenityName</td>
+                                                        <td><a href="../../Content/Uploads/@file.amenityName" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                    </tr>
+                                                    count4 += 1;
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-4" class="tab-pane">
+                                <div class="full-height-scroll">
+                                    <div class="row" style="margin-right: 23px; margin-left: 23px;">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th> عنوان القرار</th>
+
+                                                    @*<th></th>*@
+                                                    @* <th> اللجنة الصادرة منها </th>*@
+                                                    <th> بداية اصدار القرار</th>
+                                                    <th> بداية تنفيذ القرار</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in ViewBag.Decitions as List<Core.Models.DecisionViewModel>)
+                                                {
+                                                    <tr>
+                                                        <td> @item.title</td>
+                                                        <td> @item.createdDate.ToShortDateString()</td>
+                                                        <td> @item.startDate.ToShortDateString()</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-5" class="tab-pane">
+                                <div class="full-height-scroll">
+                                    <div class="row" style="margin-right: 23px; margin-left: 23px;">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th> أسم المكلف بها</th>
+                                                    <th>عنوان المهمة</th>
+                                                    <th> نهاية المهمة</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in ViewBag.Tasks as List<Core.Models.TaskViewModel>)
+                                                {
+                                                    var name = (ViewBag.Users as List<Core.Models.UserDropDownViewModel>).Where(x => x.id == item.defermentReason).FirstOrDefault() != null ? (ViewBag.Users as List<Core.Models.UserDropDownViewModel>).Where(x => x.id == item.defermentReason).FirstOrDefault().fullname : "";
+                                                    <tr>
+                                                        <td> @name</td>
+                                                        <td>@item.notes</td>
+
+                                                        @*<td label> 2023-3-14 &nbsp; 1:30pm</label></td>*@
+                                                        <td>@item.expectedCompletionDate.ToShortDateString()</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-6" class="tab-pane">
+                                <div class="full-height-scroll">
+                                    <div class="row" style="margin-right: 23px; margin-left: 23px;">
+                                        @foreach (var vote in ViewBag.Votes)
+                                        {
+                                            <h4 style="color:black">@vote.Key</h4>
+                                            <table class="table table-striped">
+
+                                                <thead>
+                                                    <tr>
+                                                        <th>الاسم</th>
+                                                        <th>الاجابة</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in vote.Element)
+                                                    {
+                                                        <tr>
+                                                            <td> @item.username</td>
+                                                            <td>@item.pollOption</td>
+
+
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-12" style="margin-top:20px">
+            <a href="@Url.Action("Index","Archives")" class="btn btn-primary btn-sm" style="float:left ; margin-left:13px;"> <span class="bold">رجوع الى القائمة</span></a>
+        </div>
+
+    </div>
+    @section scripts{
+        <script>
+            $(".modal-trigger").click(function (e) {
+                e.preventDefault();
+                dataModal = $(this).attr("data-modal");
+                $("#" + dataModal).css({ "display": "block" });
+                // $("body").css({"overflow-y": "hidden"}); //Prevent double scrollbar.
+            });
+
+            $(".close-modal, .modal-sandbox").click(function () {
+                $(".modal").css({ "display": "none" });
+                // $("body").css({"overflow-y": "auto"}); //Prevent double scrollbar.
+            });
+            function ApproveInvitation(ele) {
+                $.ajax({
+                    type: "Get",
+                    url: "../ApproveInvitation",
+                    data: { id: $(ele).data("id") }
+                }).done(function (result) {
+                    if (result)
+                        window.location.reload();
+                }).fail(function (data) {
+                    // Optionally alert the user of an error here...
+                });
+            }
+            function RejectInvitation(ele) {
+                $.ajax({
+                    type: "Get",
+                    url: "../RejectInvitation",
+                    data: {
+                        id: $(ele).data("id"), inviteStatusReason = $("#inviteStatusReason").val()
+                    }
+                }).done(function (result) {
+                    if (result)
+                        window.location.reload();
+                }).fail(function (data) {
+                    // Optionally alert the user of an error here...
+                });
+            }
+
+        </script>
+        @if (ViewBag.Success != null)
+        {
+            if (ViewBag.Success)
+            {
+                <script>
+                    var x = document.getElementById("snackbar");
+                    // Add the "show" class to DIV
+                    x.className = "show";
+                    // After 3 seconds, remove the show class from DIV
+                    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+                </script>
+            }
+            else
+            {
+
+                <script>
+
+                    var x = document.getElementById("snackbarerrorrequest");
+                    // Add the "show" class to DIV
+                    x.className = "show";
+                    // After 3 seconds, remove the show class from DIV
+                    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+                </script>
+            }
+        }
+    }

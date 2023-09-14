@@ -1,0 +1,296 @@
+﻿@model Core.Models.RoomViewModel
+@{
+    ViewBag.Title = "تغيير قاعة أجتماع جديدة";
+}
+}
+<div id="wrapper">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="col-lg-10" style="padding: 10px; padding-right: 0; color: #bba20b; margin-inline: -41px;">
+                <span class="material-symbols-outlined">check_box_outline_blank</span><b>تغيير قاعة أجتماع </b>
+            </h2>
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-lg-11">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <form id="form" method="post" enctype="multipart/form-data">
+                            <div id="step1" style="display:block;">
+                                <h3 style="color: #406847; margin-right: 4px; ">
+                                    <span class="material-symbols-outlined"
+                                          style="font-size: 18px;margin-right: 7px;">feed</span> معلومات قاعة الأجتماع
+                                </h3>
+                                <fieldset>
+                                    <input type="hidden" name="roomId" id="roomId" value="@Model.roomId" />
+                                    <div class="row col-lg-12" style="margin-right:-182px;">
+                                        <div class="col-sm-6" style="padding-right:0">
+                                            <div class="form-group">
+                                                <label>أسم القاعة *:  </label>
+                                                <input name="roomName" value="@Model.roomName" id="roomName" type="text" class="form-control" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label> وصف القاعة *:  </label>
+                                                <input name="roomLocation" value="@Model.roomLocation" id="roomLocation" placeholder="مثال :الدور الثاني المكتب رقم 11" type="text" class="form-control">
+                                            </div>
+                                            @*<div class="form-group">
+                                                <label>عدد الأجهزه المتوفرة *:</label>
+                                                <input name="capacity" value="@Model.capacity" id="capacity" placeholder="عدد الأجهزة" type="text" required class="form-control">
+                                            </div>*@
+                                            <br> <br>
+                                        </div>
+                                        <div class="col-sm-6" style="padding-right:0">
+                                            <div class="form-group">
+                                                <label>
+                                                    نوع القاعة *:
+                                                </label>
+
+                                                <select name="type" id="type" class="form-control m-b " required>
+
+                                                    @if (Model.type == "مكتب")
+                                                    {
+                                                        <option value="">أختر</option>
+                                                        <option value="مكتب" selected>مكتب</option>
+                                                        <option value="قاعة صغيرة">قاعة صغيرة</option>
+                                                        <option value="قاعة كبيرة">قاعة كبيرة</option>
+                                                        <option value="غرفة اجتماعات">غرفة اجتماعات</option>
+                                                    }
+                                                    else if (Model.type == "قاعة صغيرة")
+                                                    {
+                                                        <option value="">أختر</option>
+                                                        <option value="مكتب">مكتب</option>
+                                                        <option value="قاعة صغيرة">قاعة صغيرة</option>
+                                                        <option value="قاعة كبيرة">قاعة كبيرة</option>
+                                                        <option value="غرفة اجتماعات">غرفة اجتماعات</option>
+                                                    }
+                                                    else if (Model.type == "قاعة كبيرة")
+                                                    {
+                                                        <option value="">أختر</option>
+                                                        <option value="مكتب">مكتب</option>
+                                                        <option value="قاعة صغيرة">قاعة صغيرة</option>
+                                                        <option value="قاعة كبيرة" selected>قاعة كبيرة</option>
+                                                        <option value="غرفة اجتماعات">غرفة اجتماعات</option>
+                                                    }
+                                                    else if (Model.type == "غرفة اجتماعات")
+                                                    {
+                                                        <option value="">أختر</option>
+                                                        <option value="مكتب">مكتب</option>
+                                                        <option value="قاعة صغيرة">قاعة صغيرة</option>
+                                                        <option value="قاعة كبيرة">قاعة كبيرة</option>
+                                                        <option value="غرفة اجتماعات" selected>غرفة اجتماعات</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="" selected>أختر</option>
+                                                        <option value="مكتب">مكتب</option>
+                                                        <option value="قاعة صغيرة">قاعة صغيرة</option>
+                                                        <option value="قاعة كبيرة">قاعة كبيرة</option>
+                                                        <option value="غرفة اجتماعات">غرفة اجتماعات</option>
+                                                    }
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div id="step2" style="display:none;">
+                                <h1 style="color: #406847;">التفاصيل</h1>
+                                <fieldset>
+                                    <div class="full-height-scroll" style="margin-right:-182px;">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-group">تفاصيل القاعة : </label>
+                                                    <textarea class="form-control" name="description" id="description" cols="5" rows="3">@Model.description</textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>صورة القاعة : </label>
+                                                    <img src="../../Content/Uploads/@Model.image" style="width:100%" />
+                                                    <input class="form-control" type="file" name="files" id="files" multiple="multiple" style="width: 80%;">
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="col-lg-12" style="height:50px">
+                                <a href="@Url.Action("Index","Room")" class="btn btn-primary" style="float:left ; margin-left:13px;"> <span class="bold">رجوع الى القائمة</span></a>
+
+                                <button id="nextBtn" type="button" class="btn btn-primary" onclick="nextStep()">التالي</button>
+
+                                <button id="submitBtn" type="submit" class="btn btn-primary" style="display:none">إرسال</button>
+                                <button id="prevBtn" class="btn btn-primary" onclick="prevStep()">السابق</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+    </script>
+    <script>
+        let currentStep = 1;
+
+        function prevStep() {
+            if (currentStep === 1) return;
+            currentStep--;
+            showStep(currentStep);
+        }
+
+        function nextStep() {
+            if (currentStep === 2) return;
+            currentStep++;
+            showStep(currentStep);
+        }
+
+        function showStep(stepNumber) {
+            const stepDivs = document.querySelectorAll('[id^="step"]');
+            for (let i = 0; i < stepDivs.length; i++) {
+                if (i === stepNumber - 1) {
+                    stepDivs[i].style.display = 'block';
+                } else {
+                    stepDivs[i].style.display = 'none';
+                }
+            }
+
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            if (stepNumber === 1) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+            }
+
+            if (stepNumber === 2) {
+                $("#submitBtn").show();
+                $("#nextBtn").hide();
+                nextBtn.innerHTML = 'إرسال';
+            } else {
+                $("#submitbtn").hide();
+                $("#nextBtn").show();
+                nextBtn.innerHTML = 'التالي';
+            }
+        }
+
+        showStep(currentStep);
+    </script>
+
+    <script>
+        let count = 0; // Initialize count to 0
+
+        function addPerson() {
+            const attendeeName = document.getElementById("attendeeName").value;
+            const attendeeOrganization = document.getElementById("attendeeOrganization").value;
+
+
+
+            if (attendeeName && attendeeOrganization) { // Check if both fields are filled
+                count++; // Increment count
+                const tableBody = document.getElementById("tableBody");
+                const newRow = tableBody.insertRow(); // Insert a new row
+                const cell1 = newRow.insertCell(0); // Insert count number cell
+                const cell2 = newRow.insertCell(1); // Insert first name cell
+                const cell3 = newRow.insertCell(2); // Insert first name cell
+
+                cell1.innerHTML = count;
+                cell2.innerHTML = attendeeName;
+                cell3.innerHTML = attendeeOrganization;
+
+
+            }
+
+        }
+
+        let countt = 0; // Initialize count to 0
+
+
+
+        let counts = 0; // Initialize count to 0
+
+        function addSpeakers() {
+            const attendSpeaker = document.getElementById("attendSpeaker").value;
+            const Title = document.getElementById("Title").value;
+            const Time = document.getElementById("Time").value;
+
+
+
+            if (attendSpeaker && Title && Time) { // Check if both fields are filled
+                counts++; // Increment count
+                const Addtable = document.getElementById("Addtable");
+                const newRow = Addtable.insertRow(); // Insert a new row
+                const cell1 = newRow.insertCell(0); // Insert count number cell
+                const cell2 = newRow.insertCell(1); // Insert first name cell
+                const cell3 = newRow.insertCell(2); // Insert first name cell
+                const cell4 = newRow.insertCell(3); // Insert first name cell
+
+                cell1.innerHTML = counts;
+                cell2.innerHTML = attendSpeaker;
+                cell3.innerHTML = Title;
+                cell4.innerHTML = Time;
+
+
+            }
+
+        }
+        let countTabel = 0; // Initialize count to 0
+        function addDataTableStriped() {
+            const Subjeform_File_Multiplect = document.getElementById("formFileMultiple").value;
+
+            if (Subjeform_File_Multiplect) { // Check if both fields are filled
+                countTabel++; // Increment count
+                const tableBody = document.getElementById("ListOfAttachments");
+                const newRow = tableBody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                const cell3 = newRow.insertCell(2);
+
+                cell1.innerHTML = countTabel;
+                cell2.innerHTML = Subjeform_File_Multiplect;
+                cell3.innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
+
+                document.getElementById("formFileMultiple").value = '';
+
+
+            }
+        }
+
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        if (ViewBag.Success)
+        {
+            <script>
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+        else
+        {
+
+            <script>
+
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+            }
+        }
+    }

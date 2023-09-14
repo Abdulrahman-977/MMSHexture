@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Core.Models.NotificationViewModel>
+
+@if (Model.Count() == 0)
+{
+    <p style="text-align: center;padding: 10px;font-weight: bold;">لا يوجد اجتماعت اليوم</p>
+}
+<ul class="todo-list m-t col-lg-12">
+    @foreach (var noti in Model)
+    {
+        var style = "";
+        if (!noti.isRead)
+        {
+            style = "background: #f8ac597a;";
+        }
+        <li style="@style">
+            <span class="m-l-xs" style="color: #173654;">@noti.notificationHeadline</span>
+            <small class="label label-danger" style="float:right;background-color:green !important"><i class="fa fa-clock-o"></i>@noti.lastActivityDateTime.ToShortDateString()</small>
+        </li>
+    }
+</ul>
+<hr>
+<a href="@Url.Action("ShowAllNotification","Home")" style="color: #bba20b; margin-right: 30%; font-size: 15px; "><i class="fa fa-angle-right">&nbsp;&nbsp; </i><strong>مشاهدة جميع التنبيهات</strong></a>

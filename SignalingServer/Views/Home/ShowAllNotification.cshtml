@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "التنبيهات";
+}
+<div id="wrapper">
+    <div class="col-lg-12" style=" margin-top: 4%;">
+        <div class="ibox float-e-margins">
+            <h2 class="col-lg-10" style="color: #bba20b; margin-inline: -41px;"><span class="material-symbols-outlined">check_box_outline_blank</span><b>التنبيهات</b></h2>
+            <br>
+
+            <br> <br>
+            <div class="ibox-content" style="margin-right: -56px;">
+                <table id="myTable" class="table table-striped">
+                    <thead>
+                        <tr>
+
+                            <th>العنوان </th>
+                            <th>التفاصيل</th>
+                            <th>التاريخ - الوقت</th>
+                            <th>خصائص</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var noti in Model)
+                        {
+                            <tr>
+                                <td>@noti.notificationHeadline</td>
+                                <td>@noti.notificationText </td>
+                                <td>@noti.lastActivityDateTime</td>
+                                <td>
+                                    <a value="" onclick="ShowDeleteModal(@noti.notificationId,'@Url.Action("DeleteNotification", "Home", new { id =noti.notificationId })')"
+                                       class="btn btn-info btn-danger">حذف</a>
+                                </td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">شاشة تأكيد الحذف </h5>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="" id="dataid" />
+                <input type="hidden" value="" id="dataurl" />
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <p>هل انت متأكد من الحذف  ؟</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="$('#deleteModal').modal('hide')">اغلاق</button>
+                <button type="button" data-id="" class="btn btn-primary" onclick="DeleteData()" style="margin-top:0">تأكيد</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+
+    <script>
+        function ShowDeleteModal(Id, url) {
+            $('#deleteModal').modal('show')
+            $("#dataid").val(Id);
+            $("#dataurl").val(url);
+        }
+        function DeleteData() {
+            window.location.replace($("#dataurl").val())
+        }
+    </script>
+
+    @if (ViewBag.Success != null)
+    {
+        if (ViewBag.Success)
+        {
+            <script>
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+        else
+        {
+
+            <script>
+
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+    }
+}

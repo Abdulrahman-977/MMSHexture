@@ -1,0 +1,276 @@
+/* Googlefont Poppins CDN Link */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+	background:  #ABB9c4;		
+}
+
+#snackbar, #snackbarerror, #snackbarerrorrequest, #snackbarstartrequest, #snackbardenied {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    min-width: 250px; /* Set a default minimum width */
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    background-color: #333; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: 30px; /* 30px from the bottom */
+}
+
+    /* Show the snackbar when clicking on a button (class added with JavaScript) */
+    #snackbar.show, #snackbarerror.show, #snackbarerrorrequest.show, #snackbarstartrequest.show, #snackbardenied.show {
+        visibility: visible; /* Show the snackbar */
+        /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+  However, delay the fade out process for 2.5 seconds */
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+.screen__background {		
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 0;
+	-webkit-clip-path: inset(0 0 0 0);
+	clip-path: inset(0 0 0 0);	
+}
+.screen__background__shape {
+	transform: rotate(45deg);
+	position: absolute;
+}
+.screen__background__shape1 {
+	height: 520px;
+	width: 520px;
+	background: #FFF;	
+	top: -50px;
+	right: 120px;	
+	border-radius: 72px 72px 72px 72px;
+}
+.screen__background__shape2 {
+	height: 220px;
+	width: 220px;
+	background: #57788B;	
+	top: -172px;
+	right: 0;	
+	border-radius: 32px;
+}
+.screen__background__shape3 {
+	height: 540px;
+	width: 190px;
+	background: linear-gradient(270deg, #57788B, #33576B);
+	top: -24px;
+	right: 0;	
+	border-radius: 32px;
+}
+.screen__background__shape4 {
+	height: 400px;
+	width: 150px;
+	background: #7E94A1;	
+	top: 320px;
+	right: 30px;	
+	border-radius: 60px;
+} 
+.login {
+	width: 320px;
+	padding: 30px;
+	padding-top: 1px;
+}
+.login__field {
+	padding: 20px 0px;	
+	position: relative;	
+}
+.login__icon {
+	position: absolute;
+	top: 30px;
+	color: #33576B;
+}
+.login__input {
+	border: none;
+	border-bottom: 2px solid #D1D1D4;
+	background: none;
+	padding: 10px;
+	padding-left: 24px;
+	font-weight: 700;
+	width: 100%;
+	transition: .2s;
+  text-align: center;
+} 
+.login__input:active,
+.login__input:focus,
+.login__input:hover {
+	outline: none;
+	border-bottom-color: #33576B;
+} 
+.forms {
+	display: flex;
+	align-items: flex-start;
+    z-index: 1;
+	height: 100%;
+    position: absolute;
+    right:20%;
+}
+
+.switcher {
+	position: relative;
+	cursor: pointer;
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+	padding: 0;
+	text-transform: uppercase;
+	font-family: inherit;
+	font-size: 16px;
+	letter-spacing: .5px;
+	color: #999;
+	background-color: transparent;
+	border: none;
+	outline: none;
+	transform: translateX(0);
+	transition: all .3s ease-out;
+}
+
+
+
+.form {
+	overflow: hidden;
+	min-width: 260px;
+	margin-top: 50px;
+	padding: 30px 25px;
+  border-radius: 5px;
+	transform-origin: top;
+}
+.form fieldset {
+	position: relative;
+	opacity: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	transition: all .3s ease-out;
+}
+.form-login fieldset {
+	transform: translateX(-50%);
+}
+.form-wrapper.is-active fieldset {
+	opacity: 1;
+	transform: translateX(0);
+	transition: opacity .4s ease-in, transform .35s ease-in;
+}
+
+
+
+
+.btn-login {
+	color: #1C282E;
+	background: #fff;
+	transform: translateX(-30%);
+  color: #2B4C5D;
+	background: #fff;
+	box-shadow: inset 0 0 0 2px #6A8595;
+	transform: translateX(30%);
+	font-size: 18px;
+	margin-top: 30px;
+	padding: 16px 20px;
+	border-radius: 20px;
+	border: 1px solid #7E94A1;
+	text-transform: uppercase;
+	font-weight: 700;
+	align-items: center;
+	width: 80%;
+	color: #33576B;
+	box-shadow: 0px 1px 1px #57788B;
+	cursor: pointer;
+	transition: .2s;
+} 
+.btn-login:active,
+.btn-login:focus,
+.btn-login:hover {
+	border-color: #33576B;
+	outline: none;
+}
+
+	
+
+.link {
+  color: #A1AFBA;
+  font-size: 11px;
+  right: 0%;
+  
+}
+.link:hover {
+  color: #273F4B;
+}
+
+
+
+.login__label--checkbox {
+	display: inline-block;
+	position: relative;
+	color: #273F4B;
+	font-size: .75rem;
+	text-transform: inherit;
+	
+}
+input[type='checkbox'] {
+    accent-color: #273F4B;
+}
+
+

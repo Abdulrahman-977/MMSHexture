@@ -1,0 +1,160 @@
+﻿@model Core.Models.RoomViewModel
+@{
+    ViewBag.Title = "إنشاء قاعة أجتماع جديدة";
+}
+<div id="wrapper">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="col-lg-10" style="padding: 10px; padding-right: 0; color: #bba20b; margin-inline: -41px;">
+                <span class="material-symbols-outlined">meeting_room</span><b>إنشاء قاعة أجتماع جديدة </b>
+            </h2>
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-lg-11">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <form id="form" method="post" enctype="multipart/form-data" style="margin-bottom:20px">
+                            <div id="step1" style="display:block;">
+                                <h3 style="color: #406847; margin-right: 4px; ">
+                                    <span class="material-symbols-outlined"
+                                          style="font-size: 18px;margin-right: 7px;">feed</span> معلومات قاعة الأجتماع
+                                </h3>
+                                <fieldset>
+                                    <div class="row col-lg-12" style="margin-right:-182px;">
+                                        <div class="col-sm-6" style="padding-right:0">
+                                            <div class="form-group">
+                                                <label>أسم القاعة *:  </label>
+                                                <input name="roomName" id="roomName" type="text" class="form-control" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label> وصف القاعة *: </label>
+                                                <input name="roomLocation" id="roomLocation" placeholder="مثال :الدور الثاني المكتب رقم 11" type="text" class="form-control">
+                                            </div>
+                                            @*<div class="form-group">
+                                                <label>عدد الأجهزه المتوفرة *:</label>
+                                                <input name="capacity" id="capacity" placeholder="عدد الأجهزة" type="text" required class="form-control">
+                                            </div>*@
+                                            <br> <br>
+                                        </div>
+                                        <div class="col-sm-6" style="padding-right:0">
+                                            <div class="form-group">
+                                                <label>
+                                                    نوع القاعة *:
+                                                </label>
+                                                <select name="type" id="type" class="form-control m-b " required>
+                                                    <option value="">أختر</option>
+                                                    <option value="مكتب">مكتب</option>
+                                                    <option value="قاعة صغيرة">قاعة صغيرة</option>
+                                                    <option value="قاعة كبيرة">قاعة كبيرة</option>
+                                                    <option value="غرفة اجتماعاتs">غرفة اجتماعات</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div id="step2" style="display:none;">
+                                <h1 style="color: #406847;">التفاصيل</h1>
+                                <fieldset>
+                                    <div class="full-height-scroll" style="margin-right:-182px;">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-group">تفاصيل القاعة : </label>
+                                                    <textarea class="form-control" name="description" id="description" cols="5" rows="3"></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>صورة القاعة : </label>
+                                                    <input class="form-control" type="file" name="files" id="files" multiple="multiple" style="width: 80%;">
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <a href="@Url.Action("Index","Room")" class="btn btn-primary" style="float:left ; margin-left:13px;"> <span class="bold">رجوع الى القائمة</span></a>
+
+                                <a href="javascript:" id="nextBtn" type="button" class="btn btn-primary" onclick="nextStep()">التالي</a>
+
+                                <button id="submitBtn" type="submit" class="btn btn-primary" style="display:none">إرسال</button>
+                                @*<a href="javascript:" id="prevBtn" class="btn btn-primary" onclick="prevStep()">السابق</a>*@
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        var check = false;
+        let currentStep = 1;
+
+        function prevStep() {
+            if (currentStep === 1) return;
+            currentStep--;
+            $("#step2").hide();
+            $("#step1").show();
+            $("#nextBtn").show();
+            $("#submitBtn").hide();
+            
+        }
+
+        function nextStep() {
+            check = ($("#roomName").val() != "" && $("#roomLocation").val() != "" && $("#capacity").val() != "" && $("#type").val() != "");
+            if (check) {
+                $("#step2").show();
+                $("#step1").hide();
+                $("#nextBtn").hide();
+                $("#submitBtn").show();
+                currentStep += 1;
+            } else {
+                var x = document.getElementById("snackbarerror");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            }
+        }
+
+    </script>
+
+    <script>
+        
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        if (ViewBag.Success)
+        {
+            <script>
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+        else
+        {
+
+            <script>
+
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+            }
+        }
+    }

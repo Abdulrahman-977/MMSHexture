@@ -1,0 +1,120 @@
+﻿@model IEnumerable<Core.Models.UserDropDownViewModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="wrapper" style="margin-right:18px; margin-top:40px;">
+    <h2 class="col-lg-10" style="color: #bba20b; margin-inline: -45px; margin-top: 3%;"><span class="material-symbols-outlined">groups_3</span><b> إدارة مستخدمين </b></h2>
+    <form action="@Url.Action("Add","Users")">
+        <button title="Create new cluster" class="btn btn-primary btn-sm"
+                style="float:left ; margin-left:40px; margin-top: 3%;">
+            <i class="fa fa-plus"></i> <span class="bold">إضافة مستخدم </span>
+        </button>
+    </form>
+    <br> <br>
+    <div class="ibox-content" style="margin-left:40px;margin-right:180px ;margin-bottom: 7%;" dir="ltr">
+        <table id="data_table" class="table table-striped dataTables-example" dir="rtl">
+            <thead>
+                <span class="material-symbols-outlined" style="float: right; line-height: 32px;">search</span>
+
+                <tr>
+                    <th id="Name">الأسم </th>
+                    <th id="Number">المسمى الوظيفي</th>
+                    <th id="Number">رقم الجوال</th>
+                    @*<th id="Email">البريد الالكتروني</th>*@
+                    <th>خصائص</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td id="Name_row1">@user.fullname</td>
+                        <td id="Number_row1">@user.title</td>
+                        <td id="Email_row1" style="direction: ltr;">@user.mobile</td>
+                        <td>
+                            <a value="" onclick="ShowDeleteModal('@user.id','@Url.Action("Delete", "Users", new { Id = user.id })')"
+                               class="btn btn-info btn-danger">حذف</a>
+                            <a class="btn btn-info" href="@Url.Action("Edit","Users", new { userId = user.id })" value="">تعديل</a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">شاشة تأكيد الحذف </h5>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="" id="dataid" />
+                <input type="hidden" value="" id="dataurl" />
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <p>هل انت متأكد من الحذف  ؟</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="$('#deleteModal').modal('hide')">اغلاق</button>
+                <button type="button" data-id="" class="btn btn-primary" onclick="DeleteData()" style="margin-top:0">تأكيد</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+
+    <script>
+        function ShowDeleteModal(Id, url) {
+            $('#deleteModal').modal('show')
+            $("#dataid").val(Id);
+            $("#dataurl").val(url);
+            console.log($("#dataurl").val(url))
+        }
+        function DeleteData() {
+            window.location.replace($("#dataurl").val())
+        }
+    </script>
+
+    @if (ViewBag.Success != null)
+    {
+        if (ViewBag.Success)
+        {
+            <script>
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+        else
+        {
+
+            <script>
+
+                var x = document.getElementById("snackbarerrorrequest");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+    }
+    @if (ViewBag.Denied != null)
+    {
+       
+            <script>
+                var x = document.getElementById("snackbardenied");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        
+    }
+}
+

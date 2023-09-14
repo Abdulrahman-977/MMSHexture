@@ -1,0 +1,397 @@
+﻿@model WebApplication5.Models.MeetingAttendeeViewModel
+@{
+    ViewBag.Title = "معلومات الأجتماع";
+    var date = Model.meeting.meetingDate.ToShortDateString() + " " + Model.meeting.meetingEndTime;
+    var meetingdate = Convert.ToDateTime(date);
+    TimeSpan duration = meetingdate - DateTime.Now;
+    var endtime = (duration.TotalSeconds == 0 || duration.TotalSeconds < 0);
+}
+
+<div id="wrapper">
+    <div class="row wrapper border-bottom white-bgpage-heading"
+         style="margin-right:178px;margin-left:27px;margin-top:40px;">
+        <div class="card">
+            <h2 class="col-lg-10" style="color: #bba20b; margin-inline: -225px; margin-top: 3%;">
+                <span class="material-symbols-outlined">check_box_outline_blank</span><b>معلومات الأجتماع </b>
+            </h2>
+            <!-- <h2 style="text-align: right; "><b>معلومات الاجتماع</b></h2> -->
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-lg-6" style="margin-right:-210px;">
+                        <label class="control-label">موضوع الأجتماع</label>
+                        <input type="text" readonly value="@Model.meeting.meetingSubject" placeholder="الموضوع" class="form-control">
+                    </div>
+                    <div class="col-lg-6" id="data_1" style="margin-right:-210px;">
+                        <label class=" control-label">تاريخ الأجتماع</label>
+                        <input type="date" readonly id="datepicker"  style="text-align:right" value="@Model.meeting.meetingDate.ToString("yyyy-MM-dd")" class="form-control">
+                    </div>
+                    <div class="col-lg-6" id="data_1" style="margin-right:-210px;">
+                        <label readonly class="control-label">قاعة الاجتماع</label>
+                        <input type="text" readonly placeholder="قاعة الاجتماع" value="@Model.roomname" class="form-control">
+                    </div>
+                    <div class="col-lg-6" id="data_1" style="margin-right:-210px;">
+                        <label class=" control-label">الرقم المرجعي</label>
+                        <input type="text" readonly placeholder="الرقم" value="@Model.meeting.meetingNumber" class="form-control">
+                    </div>
+                    <div class="col-lg-6" id="data_1" style="margin-right:-210px;">
+                        <label class=" control-label">وقت بداية الأجتماع</label>
+                        <input type="time" readonly placeholder="أسم اللجنة"  style="text-align:right" value="@Model.meeting.meetingStartTime" class="form-control">
+                    </div>
+                    <div class="col-lg-6" id="data_1" style="margin-right:-210px;">
+                        <label class=" control-label">وقت نهاية الأجتماع</label>
+                        <input type="time" readonly placeholder="أسم اللجنة" style="text-align:right" value="@Model.meeting.meetingEndTime" class="form-control">
+                    </div>
+                    <div class="col-lg-6" id="data_1" style="margin-right:-210px;">
+                        <label class=" control-label">اللجنة</label>
+                        <input type="text" readonly placeholder="أسم اللجنة" value="@Model.boardname" class="form-control">
+                    </div>
+                    <div class="col-lg-9" id="data_1" style="margin-right:-210px; ">
+                        <label class=" control-label">
+                            الملاحظات حول الأجتماع
+                        </label>
+                        <textarea class="form-control" readonly id="VisitReport" cols="9" rows="1">@Model.meeting.meetingComment</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+            <div class="card">
+                <div class="clients-listreport" style="margin-right:0%; width: 100%;">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="clients.html#tab-1"
+                               style="border-top-color: black; border-right-color: black;margin-right:0%;">
+                                <span class="material-symbols-outlined" style="font-size:12px">text_to_speech</span>
+                                المتحدثون
+                            </a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="clients.html#tab-2"
+                               style="border-top-color: black;border-left-color: black;border-right-color: black;margin-right:0%;">
+                                <span class="material-symbols-outlined" style="font-size:12px">groups</span> المدعوين
+                            </a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="clients.html#tab-3"
+                               style="border-top-color: black; border-left-color: black;margin-right:0%;">
+                                <span class="material-symbols-outlined" style="font-size:12px">attach_email</span> المرفقات
+                            </a>
+                        </li>
+                        @*<li class="">
+                            <a data-toggle="tab" href="clients.html#tab-4"
+                               style="border-top-color: black; border-left-color: black;margin-right:0%;">
+                                <span class="material-symbols-outlined" style="font-size:12px">desktop_mac</span> الاجهزة
+                            </a>
+                        </li>*@
+                    </ul>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="tab-content ">
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="full-height-scroll">
+                                        <div class="row" style="margin-right: 23px; margin-left: 23px;">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>أسم المتحدث</th>
+                                                            <th>الموضوع</th>
+                                                            <th>مدة التحدث</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{ var count = 1;}
+                                                        @foreach (var speaker in Model.Speakers)
+                                                        {
+                                                            var name = Model.Attendees.Where(x => x.meetingAttendeeId == speaker.meetingAttendeeId).FirstOrDefault().attendeeName;
+                                                            <tr>
+                                                                <td>@count</td>
+                                                                <td>@name</td>
+                                                                <td>@speaker.subject</td>
+                                                                <td>@speaker.time</td>
+                                                            </tr>
+                                                            count += 1;
+                                                        }
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-2" class="tab-pane">
+                                    <div class="full-height-scroll">
+                                        <div class="row" style="margin-right: 23px; margin-left: 23px;">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>الأسم</th>
+                                                        <th>تصنيف المستخدم</th>
+                                                        <th>دور المستخدم</th>
+                                                        <th>الحالة</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{ var count2 = 1;}
+                                                    @foreach (var attendee in Model.Attendees)
+                                                    {
+                                                        <tr>
+                                                            <td>@count2</td>
+                                                            <td>@attendee.attendeeName</td>
+                                                            <td>@attendee.attendeeOrganization</td>
+                                                            @if (attendee.attendeeRole == 1)
+                                                            {
+                                                                <td>منسق</td>
+                                                            }
+                                                            else if (attendee.attendeeRole == 2)
+                                                            {
+                                                                <td>عضو</td>
+                                                            }
+                                                            @if (attendee.inviteStatus == 0)
+                                                            {
+                                                                <td>بانتظار قبول الدعوه</td>
+                                                            }
+                                                            else if (attendee.inviteStatus == 1)
+                                                            {
+                                                                <td>مقبوله</td>
+                                                            }
+                                                            else if (attendee.inviteStatus == 2)
+                                                            {
+                                                                <td>لم يتم القبول</td>
+                                                            }
+                                                        </tr>
+                                                        count2 += 1;
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-3" class="tab-pane">
+                                    <div class="full-height-scroll">
+                                        <div class="row" style="margin-right: 23px; margin-left: 23px;">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>الأسم</th>
+                                                        <th>المرفق</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{ int count4 = 1;}
+                                                    @foreach (var file in ViewBag.Amenities as List<Core.Models.AmenityViewModel>)
+                                                    {
+                                                        <tr>
+                                                            <td>@count4</td>
+                                                            <td>@file.amenityName</td>
+                                                            <td><a href="../../Content/Uploads/@file.amenityName" target="_blank"><i class="fa fa-eye"></i></a></td>
+                                                        </tr>
+                                                        count4 += 1;
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-4" class="tab-pane">
+                                    <div class="full-height-scroll">
+                                        <div class="row" style="margin-right: 23px; margin-left: 23px;">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>الأسم</th>
+                                                        <th>IP</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{ int count5 = 1;}
+                                                    @foreach (var device in Model.Attendees)
+                                                    {
+                                                        var deviceIp = "";
+                                                        if (!String.IsNullOrEmpty(device.attendeeEmail))
+                                                        {
+                                                            deviceIp = (ViewBag.Devices as List<Core.Models.Device>).Where(x => x.deviceId == Convert.ToInt32(device.attendeeEmail)).FirstOrDefault() != null ? (ViewBag.Devices as List<Core.Models.Device>).Where(x => x.deviceId == Convert.ToInt32(device.attendeeEmail)).FirstOrDefault().ipAddress : "";
+                                                        }
+                                                        <tr>
+                                                            <td>@count5</td>
+                                                            <td>@device.attendeeName</td>
+                                                            <td>@deviceIp</td>
+                                                        </tr>
+                                                        count5 += 1;
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if (!endtime && Model.meeting.meetingStatus == 1)
+                {
+                    if (Model.Attendee.inviteStatus == 0)
+                    {
+                        <div dir="ltr" class="col-lg-12" style=" margin-inline: 100px;">
+                            <a href="#modal-name" class="trigger-btn modal-trigger" data-toggle="modal" style="background-color: #bba20b; color: #FFF; border-radius: 3px; border-radius: 3px; display: inline-block; margin: 80px auto;">
+                                &nbsp;&nbsp; رفض الدعوه   <i class="fa fa-times" style=" color: red;float: right;padding: 5px;"></i>
+                            </a>
+                            <a href="#myModal" class="trigger-btn modal-trigger" data-toggle="modal" style="background-color: #bba20b; color: #FFF; border-radius: 3px; margin-inline: 200px;">
+                                <i class="fa fa-check"></i>&nbsp;&nbsp; قبول الدعوه
+                            </a>
+                        </div>
+                    }
+                    else if (Model.Attendee.inviteStatus == 2)
+                    {
+                        <div style="padding-top: 140px !important; width: 300px; padding: 65px; margin: 0; color: red; /* background-color: ##bba20b; */ color: red; border-radius: 3px; /* margin-inline: 200px; */ float: left;">
+                            <i class="fa fa-times" style=" color: red;float: left;"></i>تم رفض الدعوة
+                        </div>
+                        <a href="#myModal" class="trigger-btn modal-trigger" data-toggle="modal" style="background-color: #bba20b; color: #FFF; border-radius: 3px; margin-inline: 200px;">
+                            <i class="fa fa-check"></i>&nbsp;&nbsp; قبول الدعوه
+                        </a>
+                    }
+                    else if (Model.Attendee.inviteStatus == 1)
+                    {
+                        <a href="#modal-name" class="trigger-btn modal-trigger" data-toggle="modal" style="background-color: #bba20b; color: #FFF; border-radius: 3px; border-radius: 3px; display: inline-block; margin: 80px auto;">
+                            <i class="fa fa-times"></i>&nbsp;&nbsp; رفض الدعوه
+                        </a>
+                        <div style="padding-top: 100px !important; width: 300px; padding: 65px; /* margin: 0; */ color: green; /* background-color: #bba20b; */ color: green; border-radius: 3px; /* margin-inline: 200px; */ float: left; margin-left: 300px;">
+                            تم قبول الدعوة <i class="fa fa-check" style=" color: green;float: right;padding: 5px;"></i>
+                        </div>
+                    }
+
+                }
+                else
+                {<div dir="ltr" class="col-lg-12" style=" margin-top:20px">
+                        <a href="@Url.Action("Index","Board")" class="btn btn-primary " style="float:left ; margin-left:13px;"> <span class="bold">رجوع الى القائمة</span></a>
+                    </div>
+                }
+            </div>
+        <br><br><br>
+        <br><br><br>
+    </div>
+</div>
+<!-- Modal -->
+<!-- Button trigger modal -->
+<br><br><br>
+<br><br><br>
+<!-- Trigger Modal. -->
+<!-- Modal -->
+<div class="modal" id="modal-name">
+    <div class="modal-sandbox"></div>
+    <div class="modal-box">
+        <div class="modal-header" style="padding: 1px 11px;">
+            <div class="close-modal" style="width: 35px;
+    position: absolute;
+    left: 0;
+    padding: 10px;
+    background: red;
+    height: 35px;" onclick="$('#modal-name').modal('hide')">&#10006;</div>
+            <h1><span class="material-symbols-outlined" style="font-size: 20px">mail</span> رفض الدعوة</h1>
+        </div>
+        <div class="modal-body">
+            <div class="col-lg-12" style="padding-right: 100px;">
+                <label class="control-label" style="margin-right:-110px; font-size: 15px; color:#333;">سبب الرفض:</label>
+                <textarea class="form-control" id="inviteStatusReason" placeholder="أختياري" style="margin-right: -113px;" id="VisitReport"
+                          cols="5" rows="3"></textarea>
+                <br><br>
+            </div>
+            <div dir="ltr">
+                <button class="save-modal" style="background-color: #bba20b; color: #FFF; border-radius: 3px; padding: 7px 23px;" data-id="@Model.Attendee.meetingAttendeeId" onclick="RejectInvitation(this)">
+                    إرسال
+                </button>
+                <button class="close-modal" style="background-color: #bba20b; color: #FFF; border-radius: 3px; padding: 7px 23px;" onclick="$('#modal-name').modal('hide')">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #FFF;">
+                <div class="icon-box">
+                    <i class="fa fa-check"></i>
+                </div>
+            </div>
+            <div class="modal-body">
+                <h4 class="text-center" style="text-align:center"> تم قبول الدعوة</h4>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-dismiss="modal" data-id="@Model.Attendee.meetingAttendeeId" onclick="ApproveInvitation(this)">حسنا</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+    $(".modal-trigger").click(function (e) {
+            e.preventDefault();
+            dataModal = $(this).attr("data-modal");
+            $("#" + dataModal).css({ "display": "block" });
+            // $("body").css({"overflow-y": "hidden"}); //Prevent double scrollbar.
+        });
+
+        $(".close-modal, .modal-sandbox").click(function () {
+            $(".modal").css({ "display": "none" });
+            // $("body").css({"overflow-y": "auto"}); //Prevent double scrollbar.
+        });
+        function ApproveInvitation(ele) {
+            $.ajax({
+                type: "Get",
+                url: "../ApproveInvitation",
+                data: { id: $(ele).data("id") }
+            }).done(function (result) {
+                if (result)
+                    window.location.reload();
+            }).fail(function (data) {
+                // Optionally alert the user of an error here...
+            });
+        }
+        function RejectInvitation(ele) {
+            $.ajax({
+                type: "Get",
+                url: "../RejectInvitation",
+                data: {
+                    id: $(ele).data("id"), inviteStatusReason : $("#inviteStatusReason").val()  }
+            }).done(function (result) {
+                if (result)
+                    window.location.reload();
+            }).fail(function (data) {
+                // Optionally alert the user of an error here...
+            });
+        }
+
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        if (ViewBag.Success)
+        {
+            <script>
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+        else
+        {
+
+            <script>
+
+                var x = document.getElementById("snackbarerrorrequest");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+    }
+}

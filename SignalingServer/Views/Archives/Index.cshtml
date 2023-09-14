@@ -1,0 +1,144 @@
+﻿@model IEnumerable<Core.Models.Meeting>
+@{
+    ViewBag.Title = "الأرشيف";
+}
+
+<div id="wrapper" style="margin-right:18px; margin-top:40px;">
+    <h2 class="col-lg-12" style="color: #bba20b; margin-inline: -40px; margin-top: 3%;"><span class="material-symbols-outlined" ><i class="fa fa-files-o"></i></span><b> الأرشيف </b></h2>
+    <div class="ibox-content" style="margin-left:50px;margin-right:185px ;margin-bottom: 7%;" dir="ltr">
+        <table class="table table-striped dataTables-example">
+            <thead>
+                <span class="material-symbols-outlined" style="float: right; line-height: 32px;">search</span>
+                <!-- <span  style="float: right; line-height: 32px;"> :البحث </span> -->
+
+                <tr>
+                    <th colspan="2">الإجرائات </th>
+                    <th>الأجندة</th>
+                    <th>حالة الاجتماع</th>
+                    <th>نوع الاجتماع</th>
+                    <th>تاريخ الأجتماع</th>
+                    <th>رقم الأجتماع</th>
+                    <th>الموضوع</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var meeting in Model)
+                {
+                    var date = meeting.meetingDate.ToShortDateString() + " " + meeting.meetingEndTime;
+                        var meetingdate = Convert.ToDateTime(date);
+                        TimeSpan duration = meetingdate - DateTime.Now;
+                        var endtime = (duration.TotalSeconds == 0 || duration.TotalSeconds < 0);
+                    
+                <tr>
+                    <td>
+                        <a value="" onclick="ShowDeleteModal(@meeting.meetingId,'@Url.Action("Delete", "Archives", new { id = meeting.meetingId})')"
+                           class="btn btn-info btn-danger">حذف</a>
+                    </td>
+                    <td><a class="btn btn-info btn-danger" href="@Url.Action("Report", "Archives", new { Id = meeting.meetingId })">عرض التقرير</a></td>
+                    @if (meeting.meetingType == "2")
+                    {
+                        <td><a class="aarchives" href="@Url.Action("Detail", "Agenda", new { meetingId = meeting.meetingId })" style="color: #bba20b;">عرض الأجندة</a></td>
+                    }
+                    else if (meeting.meetingType == "1")
+                    {
+                        <td>ليس هناك أجندة</td>
+                    }
+                    @if (meeting.meetingStatus == 2)
+                    {
+                        <td> <small class="label label-danger" style="float:right;background-color:blue !important;direction:rtl"> بدء الاجتماع</small></td>
+
+                    }
+                    else if (endtime || meeting.meetingStatus == 3)
+                    {
+                        <td><small class="label label-danger" style="float:right;background-color:orange !important;direction:rtl"><i class="fa fa-clock-o"></i> انتهى الاجتماع</small></td>
+
+                    }
+                    else if (meeting.meetingStatus == 4)
+                    {
+                        <td> <small class="label label-danger" style="float:right;background-color:red !important;direction:rtl"><i class="fa fa-clock-o"></i> تم الغاء الاجتماع</small></td>
+
+                    }
+                    else if (meeting.meetingStatus == 1)
+                    {
+                        <td> <small class="label label-danger" style="float:right;background-color:green !important;direction:rtl"><i class="fa fa-clock-o"></i> الاجتماع مبرمج</small></td>
+
+                    }
+                    @if (meeting.meetingType == "2")
+                    {
+                        <td>اجتماع مطول</td>
+                    }
+                    else if (meeting.meetingType == "1")
+                    {
+                        <td>اجتماع مصغر</td>
+                    }
+                    <td style="direction:rtl">@meeting.meetingDate.ToShortDateString() @meeting.meetingStartTime - @meeting.meetingEndTime</td>
+                    <td>@meeting.meetingNumber</td>
+                    <td>@meeting.meetingSubject </td>
+                </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">شاشة تأكيد الحذف </h5>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="" id="dataid" />
+                <input type="hidden" value="" id="dataurl" />
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <p>هل انت متأكد من الحذف  ؟</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="$('#deleteModal').modal('hide')">اغلاق</button>
+                <button type="button" data-id="" class="btn btn-primary" style="margin-top:0" onclick="DeleteData()">تأكيد</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+
+    <script>
+        function ShowDeleteModal(Id, url) {
+            $('#deleteModal').modal('show')
+            $("#dataid").val(Id);
+            $("#dataurl").val(url);
+        }
+        function DeleteData() {
+            window.location.replace($("#dataurl").val())
+        }
+
+    </script>
+
+    @if (ViewBag.Success != null)
+    {
+        if (ViewBag.Success)
+        {
+            <script>
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+        else
+        {
+
+            <script>
+
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+    }
+}

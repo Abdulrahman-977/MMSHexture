@@ -1,0 +1,93 @@
+﻿@model IEnumerable<WebApplication5.Models.MeetingAttendeeViewModel>
+@{
+    /**/
+
+    ViewData["Title"] = "الدعوات";
+}
+<div id="wrapper" style="margin-right:18px; margin-top:40px;">
+    <h2 class="col-lg-10" style="color: #bba20b; margin-inline: -39px; margin-top: 3%;"><span class="material-symbols-outlined">outgoing_mail</span><b>&nbsp; قائمة الدعوات </b></h2>
+
+    <div class="ibox-content" style="margin-left:50px;margin-right:185px ;margin-bottom: 7%;" dir="ltr">
+        <table class="table table-striped dataTables-example">
+            <thead>
+                <span class="material-symbols-outlined" style="float: right; line-height: 32px;">search</span>
+                <tr>
+                    <th>خصائص</th>
+                    <th id="Status">الحالة</th>
+                    @*<th id="Email">البريد الالكتروني</th>*@
+                    <th id="Name">التاريخ</th>
+                    <th id="Name">اللجنة</th>
+                    <th id="nameBoard">عنوان الاجتماع </th>
+                </tr>
+            </thead>
+            <tbody>
+               
+                @foreach (var board in Model)
+                {
+                <tr id="row1">
+                    <td>
+                        <a class="btn btn-info btn-danger " href="@Url.Action("View","Invitation",new { Id = board.Id })" type="button"> معاينة</a>
+                        @* <input class="btn btn-info " style=" display: none;" type="button" id="save_button1" value="حفظ" onclick="save_row('@count')">*@
+
+                    </td>
+                    @if (board.status == 1)
+                    {
+                        <td id="Satatus_row1">مقبولة</td>
+                    }
+                    else if (board.status == 2)
+                    {
+                        <td id="Satatus_row1">لم يتم القبول</td>
+                    }
+                    else
+                    {
+                        <td id="Satatus_row1">بانتظار قبول الدعوه</td>
+                    }
+
+                    @*<td id="Email_row1"></td>
+        <td id="Name_row1"></td>*@
+                    <td >@board.Date</td>
+                    <td>@board.boardname</td>
+                    <td >@board.MeetingName</td>
+                </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">شاشة تأكيد الحذف </h5>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="" id="dataid" />
+                <input type="hidden" value="" id="dataurl" />
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <p>هل انت متأكد من الحذف  ؟</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="$('#deleteModal').modal('hide')">اغلاق</button>
+                <button type="button" data-id="" class="btn btn-primary" onclick="DeleteData()"  style="margin-top:0">تأكيد</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+
+    <script>
+        function ShowDeleteModal(Id, url) {
+            $('#deleteModal').modal('show')
+            $("#dataid").val(Id);
+            $("#dataurl").val(url);
+        }
+        function DeleteData() {
+            window.location.replace($("#dataurl").val())
+        }
+    </script>
+
+
+}

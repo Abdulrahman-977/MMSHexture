@@ -1,0 +1,113 @@
+﻿@model IEnumerable<WebApplication5.Models.BoardAndUserViewModel>
+@{
+    /**/
+
+    ViewData["Title"] = "قائمة اللجان";
+}
+<div id="wrapper" style="margin-right:18px; margin-top:40px;">
+    <h2 class="col-lg-10" style="color: #bba20b; margin-inline: -39px; margin-top: 3%;"><span class="material-symbols-outlined"><span class="material-symbols-outlined" style="font-size: 18px;">group</span></span>&nbsp;&nbsp;<b>قائمة اللجان </b></h2>
+    <a href="@Url.Action("Add","Board")" class="btn btn-primary btn-sm" style="margin-left:50px; margin-top:40px;"> <i class="fa fa-plus"></i> <span class="bold">اضافة لجنة</span></a>
+    <div class="ibox-content" style="margin-left:50px;margin-right:185px ;margin-bottom: 7%;" dir="ltr">
+        <table class="table table-striped dataTables-example">
+            <thead>
+                <span class="material-symbols-outlined" style="float: right; line-height: 32px;">search</span>
+                <tr>
+                    <th>خصائص</th>
+                    <th id="Status">الحالة</th>
+                    @*<th id="Email">البريد الالكتروني</th>*@
+                    <th id="Name">أسم مدير اللجنة</th>
+                    <th id="nameBoard">أسم اللجنة</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ var count = 1;}
+                @foreach (var board in Model)
+                {
+                    var rowid = "row" + count;
+                    <tr id="row1">
+                        <td>
+                            <a class="btn btn-info " href="@Url.Action("Edit","Board",new { Id = board.boardId })" type="button"> تعديل</a>
+                            @* <input class="btn btn-info " style=" display: none;" type="button" id="save_button1" value="حفظ" onclick="save_row('@count')">*@
+                            <a value="" onclick="ShowDeleteModal(@board.boardId,'@Url.Action("Delete", "Board", new { id = board.boardId })')"
+                               class="btn btn-info btn-danger">حذف</a>
+                        </td>
+                        @if (board.boardIsActive)
+                        {
+                            <td id="Satatus_row1">نشط</td>
+                        }
+                        else
+                        {
+                            <td id="Satatus_row1">غير نشط</td>
+                        }
+
+                        @*<td id="Email_row1">@board.usereamail</td>*@
+                        <td id="Name_row1">@board.userName</td>
+                        <td id="nameBoard_row1">@board.boardName</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">شاشة تأكيد الحذف </h5>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="" id="dataid" />
+                <input type="hidden" value="" id="dataurl" />
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <p>هل انت متأكد من الحذف  ؟</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="$('#deleteModal').modal('hide')">اغلاق</button>
+                <button type="button" data-id="" class="btn btn-primary" style="margin-top:0" onclick="DeleteData()">تأكيد</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+
+    <script>
+        function ShowDeleteModal(Id, url) {
+            $('#deleteModal').modal('show')
+            $("#dataid").val(Id);
+            $("#dataurl").val(url);
+        }
+        function DeleteData() {
+            window.location.replace($("#dataurl").val())
+        }
+
+    </script>
+
+    @if (ViewBag.Success != null)
+    {
+        if (ViewBag.Success)
+        {
+            <script>
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+        else
+        {
+
+            <script>
+
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+    }
+}

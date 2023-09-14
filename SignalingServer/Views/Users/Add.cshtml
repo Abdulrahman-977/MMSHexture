@@ -1,0 +1,204 @@
+﻿
+@{
+    ViewBag.Title = "اضافة مستخدم";
+}
+<style>
+    form {
+        margin-bottom: 20px;
+    }
+</style>
+<div id="wrapper">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2 class="col-lg-10" style="padding: 10px; padding-right: 0; color: #bba20b; margin-inline: -41px; ">
+                <span class="material-symbols-outlined">check_box_outline_blank</span><b>إنشاء مستخدم جديد </b>
+            </h2>
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-lg-11">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        @using (Html.BeginForm("Add", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <div id="step1" style="display:block;">
+                                <h3 style="color: #406847; margin-right: 4px; ">
+                                    <span class="material-symbols-outlined"
+                                          style="font-size: 18px;margin-right: 7px;">feed</span> معلومات المستخدم
+                                </h3>
+                                <fieldset>
+
+                                    <div class="row col-lg-6" style="margin-right:-182px;">
+                                        <div class="form-group">
+                                            <label>الاسم *:</label>
+                                            <input name="fullname" id="fullname" type="text" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>البريد الالكتروني *:</label>
+                                            <input name="email" id="email" type="email" class="form-control" required>
+                                            <span id="errorEmail" style="display:none;color: red;
+    font-size: 7px;
+    font-weight: bold;">البريد الالكتروني مستخدم الرجاء تغيير البريد الالكتروني !</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>رقم الجوال</label>
+                                            <input name="mobile" id="mobile" type="text" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>كلمة المرور *:</label>
+                                            <input name="password" id="password" type="password" class="form-control" required>
+                                            <span id="errorpassword" style="display:none;color: red;
+    font-size: 7px;
+    font-weight: bold;">كلمة المرور يجب ان تحتوي على 8 ارقام و حروف كبيرة و صغيرة و على أي من الرموز الخاصة</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>تاكيد كلمة المرور *:</label>
+                                            <input name="confirmpassword" id="confirmpassword" type="password" class="form-control" required>
+                                            <span id="errorconfirmpassword" style="display:none;color: red;
+    font-size: 7px;
+    font-weight: bold;">كلمة المرور و تاكيد كلمة المرور غير متطابقان</span>
+                                        </div>
+                                    </div>
+                                    <div class="row col-lg-6" style="padding-right: 55px;/* margin-right:-182px; */">
+                                        <div class="form-group">
+                                            <label>المسمى الوظيفي *:</label>
+                                            <input name="title" id="title" type="text" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>الجنس</label>
+                                            <select name="gender" id="gender" class="form-control m-b ">
+                                                <option value="" selected>الرجاء اختيار الجنس</option>
+                                                <option value="ذكر">ذكر</option>
+                                                <option value="انثى">انثى</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>الصلاحيات *:</label>
+                                            <select name="role" required id="role" class="form-control m-b ">
+                                                <option value="" selected>الرجاء اختيار الصلاحيات</option>
+                                                <option value="Admin">ادمن </option>
+                                                <option value="Director">مدير </option>
+                                                <option value="SystemDirector">مدير نظام</option>
+                                                <option value="SimpleUser">موظف </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <a href="@Url.Action("Index","Users")" class="btn btn-primary" style="float:left ; margin-left:13px;"> <span class="bold">رجوع الى القائمة</span></a>
+                            <button id="submitBtn" type="submit" class="btn btn-primary">إرسال</button>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        
+        const regex = "/^(?=.*?[A-Z])(?=(.*[a-z]))(?=(.*[\d]))(?=(.*[^a-zA-Z0-9])).{6,}$/g";
+        var check = false;
+        var checkemail = false;
+        var confirmcheck = false;
+        $("#password").change(function () {
+            check = false
+            const regex = new RegExp("^(?=.*?[A-Z])(?=(.*[a-z]))(?=(.*[\\d]))(?=(.*[^a-zA-Z0-9])).{8,}$", 'g')
+            const str = $(this).val();
+            let m;
+            
+            while ((m = regex.exec(str)) !== null) {
+                // This is necessary to avoid infinite loops with zero-width matches
+                if (m.index === regex.lastIndex) {
+                    regex.lastIndex++;
+                }
+                if (m.length != 0) {
+                    $("#errorpassword").hide()
+                    check = true;
+                    $('#submitBtn').removeAttr("disabled");
+                } else {
+                    $("#errorpassword").show()
+                }
+                // The result can be accessed through the `m`-variable.
+                m.forEach((match, groupIndex) => {
+                    console.log(`Found match, group ${groupIndex}: ${match}`);
+                });
+            }
+            if (!check) {
+                $("#errorpassword").show()
+                $("#submitBtn").attr("disabled", "disabled")
+            }
+            if ($("#confirmpassword").val() != "") {
+                if ($(this).val() == $("#confirmpassword").val()) {
+                    confirmcheck = true;
+                    $("#errorconfirmpassword").hide()
+                    $('#submitBtn').removeAttr("disabled");
+                } else {
+                    confirmcheck = false;
+                    $("#errorconfirmpassword").show()
+                    $("#submitBtn").attr("disabled", "disabled")
+                }
+            }
+            
+        });
+        $("#email").change(function () {
+            checkemail = false
+            $.ajax({
+                type: "GET",
+                url: "../Users/CheckEmail",
+                data: { email: $("#email").val() },
+            }).done(function (result) {
+                checkemail = result
+                if (!checkemail) {
+                    $("#errorEmail").show()
+                    $("#submitBtn").attr("disabled", "disabled")
+                } else {
+                    checkemail = false;
+                    $("#errorEmail").hide()
+                    $("#submitBtn").attr("disabled", "disabled")
+                }
+                
+
+            }).fail(function (data) {
+                // Optionally alert the user of an error here...
+            });
+            
+        });
+        $("#confirmpassword").change(function () {
+            if ($(this).val() == $("#password").val()) {
+                confirmcheck = true;
+                $("#errorconfirmpassword").hide()
+                $('#submitBtn').removeAttr("disabled");
+            } else {
+                confirmcheck = false;
+                $("#errorconfirmpassword").show()
+                $("#submitBtn").attr("disabled", "disabled")
+            }
+        });
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        if (ViewBag.Success)
+        {
+            <script>
+                var x = document.getElementById("snackbar");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+        else
+        {
+
+            <script>
+
+                var x = document.getElementById("snackbarerrorrequest");
+                // Add the "show" class to DIV
+                x.className = "show";
+                // After 3 seconds, remove the show class from DIV
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            </script>
+        }
+    }}

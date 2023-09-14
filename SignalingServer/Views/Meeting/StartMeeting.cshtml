@@ -1,0 +1,633 @@
+﻿@{ 
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HextureMMS | Metting</title>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/css/bootstrapp-rtl.min.css" rel="stylesheet">
+    <link href="~/Content/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/Content/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="~/Content/css/plugins/steps/jquery.steps.css" rel="stylesheet">
+    <link href="~/Content/css/animate.css" rel="stylesheet">
+    <link href="~/Content/css/style.css" rel="stylesheet">
+    <link href="~/Content/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="~/Content/css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+    <link href="~/Content/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <script src="~/Scripts/jquery.signalR-2.2.2.js"></script>
+    <script src="https://localhost:44338/signalr/hubs"></script>
+    @*<script src="http://mmshexture-001-site1.gtempurl.com/signalr/hubs"></script>*@
+    
+    <script src="~/Scripts/wrtchelper.js"></script>
+    <script src="~/Scripts/app.js"></script>
+    <style>
+        label, input {
+            color: black
+        }
+
+        .chat-user a {
+            color: black !important
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+        }
+
+        /* Safari */
+        @@-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @@keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+      
+    </style>
+    <script>
+
+
+
+        $(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            var meeting_id = urlParams.get('mid');
+            var userid_data = urlParams.get('userId')
+            if (!meeting_id) {
+                var murl = window.location.origin + "?mid=" + (new Date()).getTime();
+                $('#meetingid').attr('href', murl).text(murl);
+                $("#meetingContainer").hide();
+                $("#meetingbox").show();
+                return;
+            }
+
+            var user_id = urlParams.get('uid');
+            if (!user_id) {
+                user_id = window.prompt('Enter your nick!');
+            }
+
+            if (!user_id || !meeting_id) {
+                alert('user id or meeting id missing');
+                return;
+            }
+            $("#meetingContainer").show();
+            $("#meetingbox").hide();
+
+            MyApp._init(user_id, meeting_id, userid_data);
+
+        });
+    </script>
+</head>
+<body>
+    <div id="meetingContainer" style="padding-right: 0%;">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox chat-view" style="    height: 100%;">
+                    <div id="me" class="ibox-title" style="z-index: 111111;position: fixed;height: 100px;top: 0;width: 100%;background: #fff;">
+                        <div id="header_container" style="height: 99px;top: 0;right: 0;width: 100%;">
+                            <div class="row">
+                                <div class="col-lg-12" style="position: relative;width: 100%;">
+                                    <div class="Mtitle" style="left: 0;padding-top: 20px;position: absolute;top: 0;">
+                                        <span class="Ytitle">إدارة</span><span class="Ytitle">اللجان</span>&nbsp;<span class="Ytitle">والإجتماعات</span>
+                                    </div>
+                                    <a href="javascript:" style="right: 0;">
+                                        <img class="fixedimg" src="/Content/img/user.png" height="70px" width="70px" style="margin: 7px;margin-right: 30px;">
+                                    </a>
+                                    <div class="fixedtext" style="top: 20px;/* position: absolute; */">
+                                        <div class="fixedtextname" id="nickname">marwensouilem(Me)</div>
+                                        <div class="fixedtexttitle">@ViewBag.MeetingTitle</div>
+                                    </div>
+                                    @*<div style="top: 32px;position: absolute;left: 17%;background: red;color: white;font-weight: bold;">
+                                            <a href="@Url.Action("Index","Home")" type="button" class="btn btn-outline btn-danger">مغادرة </a>
+                                        </div>*@
+                                    @if (ViewBag.AttendeeRole == 1)
+                                    {
+                                        <div style="position: absolute;left: 265px;top: 46px;">
+                                            <div class="btn-group">
+                                                <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" aria-expanded="false">الأعدادات<span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    @if (ViewBag.MeetingType == "2")
+                                                    {
+                                                        <li style="color:#333;"><a>المداخلات &nbsp; &nbsp;<input type="checkbox" class="js-switch_3" data-switchery="true" style=""><small style="left: 20px; transition: left 0.2s ease 0s;"></small></a></li>
+                                                        <li style="color:#333;"><a>التصويت &nbsp; &nbsp;<input type="checkbox" class="js-switch" &nbsp;="" data-switchery="true"><small style="left: 20px; transition: left 0.2s ease 0s;"></small></a></li>
+                                                        <li class="divider"></li>
+                                                    }
+                                                    <a href="@Url.Action("Index","Home")" type="button" class="btn btn-outline btn-danger" style="">مغادرة </a>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<h1 id="nickname"></h1>
+                            <h3>Mon Jan 26 2015 - 18:39:23</h3>
+                            <h2>IP </h2>
+                            <span id="nickname" class="pull-left label label-primary">أسم الشخص </span>
+                            عنوان الأجتماع
+
+
+                            <div class="btn-group">
+                                <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
+                                    الأعدادات<span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li style="color:#333;"><a>المداخلات &nbsp; &nbsp;<input type="checkbox" class="js-switch_3" /></a></li>
+                                    <li style="color:#333;"><a>التصويت &nbsp; &nbsp;<input type="checkbox" class="js-switch"   /></a></li>
+                                    <li class="divider"></li>
+                                    <button type="button" class="btn btn-outline btn-danger">مغادرة </button>
+
+                                </ul>
+                            </div>*@
+                    </div>
+
+                    <div class="ibox-content" style="height: Calc(100% - 100px);margin-top: 100px;">
+                        <div class="row">
+                            <div class="col-lg-9 col-md-9 col-sm-12 " style="padding-right: 30px !important;padding: 0;margin-top: 30px;box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;/* padding-right: 0px; */">
+                                <div class="chat-discussion">
+                                    <div class="clients-list">
+                                        <ul class="nav nav-tabs">
+                                            <li class="active">
+                                                <a data-toggle="tab" href="#tab-1">
+                                                    <i></i>
+                                                    القرارات
+                                                </a>
+                                            </li>
+                                            <li id="speakerstab" class="" style="display:none">
+                                                <a data-toggle="tab" href="#tab-2">المتحدثين</a>
+                                            </li>
+                                            <li id="vottingtab" class="" style="display:none">
+                                                <a data-toggle="tab" href="#tab-3"> التصويت</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div id="tab-1" class="tab-pane active">
+                                                <div class="ibox float-e-margins">
+                                                    <div class="ibox-title">
+                                                        <h4>القرارات</h4>
+                                                    </div>
+                                                    <div class="ibox-content">
+                                                        <div class="row">
+                                                            @if (ViewBag.AttendeeRole == 1)
+                                                            {
+                                                                <div class="col-sm-6 b-r">
+                                                                    <form role="form">
+                                                                        <br>
+                                                                        <div class="form-group col-md-12">
+                                                                            <label class="col-lg-12 control-label" for="decision">
+                                                                                عنوان
+                                                                                القرار
+                                                                            </label>
+                                                                            <div class="col-lg-12">
+                                                                                <input id="decision" name="decision" type="text" placeholder="عنوان القرار" class="form-control" />
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <br>
+                                                                        <div class="form-group col-md-12">
+                                                                            <label class="col-sm-12 control-label" for="Ldecision">
+                                                                                اللجنةالصادره منها القرار
+                                                                            </label>
+                                                                            <div class="col-sm-12">
+                                                                                <select id="Ldecision" name="Ldecision" class="form-control m-b">
+                                                                                    @foreach (var board in ViewBag.Boards as List<Core.Models.BoardViewwModel>)
+                                                                                    {
+                                                                                        <option value="@board.boardId">@board.boardName</option>
+                                                                                    }
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <button type="button" id="Adddecisionbtn" class="btn btn-primary btn-sm">
+                                                                            <i class="fa fa-plus">اضافة </i>
+                                                                        </button>
+                                                                        <br>
+                                                                    </form>
+                                                                </div>
+                                                                <br>
+                                                                <div class="col-sm-6">
+                                                                    <div class="col-sm-12 form-group">
+                                                                        <label> أصدار القرار</label>
+                                                                        <input type="date" id="datepicker3" class="form-control">
+                                                                    </div>
+
+                                                                    <div class="col-sm-12 form-group">
+                                                                        <label>  بدء تنفيذ القرار</label>
+                                                                        <input type="date" id="datepicker4" class="form-control">
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            <div class="col-lg-12">
+                                                                <div class="ibox float-e-margins">
+                                                                    <div class="ibox-title">
+                                                                        <div class="ibox-tools">
+                                                                            <a class="collapse-link">
+                                                                                <i class="fa fa-chevron-up"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="ibox-content" style="border: none;padding: 15px;">
+                                                                        <table class="table table-bordered" style="color:black">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>#</th>
+                                                                                    <th>عنوان القرار</th>
+                                                                                    <th>
+                                                                                        اللجنة الصادرة منها
+                                                                                        القرار
+                                                                                    </th>
+                                                                                    <th>تاريخ اصدار القرار</th>
+                                                                                    <th>تاريخ بدء تنفيذ القرار</th>
+                                                                                    @if (ViewBag.AttendeeRole == 1)
+                                                                                    {
+                                                                                        <th> خصائص </th>
+                                                                                    }
+                                                                                    </tr>
+                                                                            </thead>
+                                                                            <tbody id="DecisionBody" style="min-height:100px;height:100px">
+                                                                                @{ var decisioncount = 1;}
+                                                                                @foreach (var decision in ViewBag.Decisions as List<Core.Models.DecisionViewModel>)
+                                                                                {
+                                                                                    var boardName = (ViewBag.Boards as List<Core.Models.BoardViewwModel>).Where(x => x.boardId == decision.boardId).FirstOrDefault().boardName;
+
+                                                                                    <TR>
+                                                                                        <td>@decisioncount</td>
+                                                                                        <td>@decision.title</td>
+                                                                                        <td>@boardName</td>
+                                                                                        <td>@decision.createdDate.ToString("yyyy-MM-dd")</td>
+                                                                                        <td>@decision.startDate.ToString("yyyy-MM-dd")    </td>
+                                                                                        @if (ViewBag.AttendeeRole == 1)
+                                                                                        {<td>
+                                                                                            <a data-type="1" data-id="@decision.decisionId" onclick="ShowDeleteModal(this)" class="btn btn-info btn-danger">حذف</a>
+                                                                                        </td>
+                                                                                        }
+                                                                                    </TR>
+                                                                                    decisioncount += 1;
+                                                                                }
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="ibox float-e-margins">
+                                                    <div class="ibox-title">
+                                                        <h4>المهام</h4>
+                                                    </div>
+                                                    <div class="ibox-content">
+                                                        <div class="row">
+                                                            @if (ViewBag.AttendeeRole == 1)
+                                                            {
+                                                                <div class="col-sm-6 b-r">
+                                                                    <br>
+
+                                                                    <form role="form">
+                                                                        <div class="form-group col-md-12">
+                                                                            <label class="col-lg-12 control-label"
+                                                                                   for="Task">
+                                                                                عنوان
+                                                                                المهمة
+                                                                            </label>
+                                                                            <div class="col-lg-12">
+                                                                                <input id="Task" name="Task" type="text" placeholder="عنوان المهمة" class="form-control">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group col-md-12">
+                                                                            <label class="col-sm-12 control-label"
+                                                                                   for="TaskName">
+                                                                                أسم
+                                                                                المكلف بها
+                                                                            </label>
+                                                                            <div class="col-sm-12">
+                                                                                <select id="TaskUser" name="TaskUser" class="form-control m-b">
+                                                                                    @foreach (var user in ViewBag.Users as List<Core.Models.UserDropDownViewModel>)
+                                                                                    {
+                                                                                        <option value="@user.id">@user.fullname</option>
+                                                                                    }
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <button id="Addtaskbtn" type="button" class="btn btn-primary btn-sm">
+                                                                            <i class="fa fa-plus">اضافة </i>
+                                                                        </button>
+                                                                        <br>
+                                                                    </form>
+
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <div class="col-sm-12 form-group" style="padding-top:15px">
+                                                                        <label>تاريخ النهاية</label>
+                                                                        <input type="date" id="datepicker2" class="form-control">
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            <div class="col-lg-12">
+                                                                <div class="ibox float-e-margins">
+                                                                    <div class="ibox-title">
+                                                                        <div class="ibox-tools">
+                                                                            <a class="collapse-link">
+                                                                                <i class="fa fa-chevron-up"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="ibox-content" style="border: none; padding: 15px;">
+                                                                        <table class="table table-bordered" style="color:black">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>#</th>
+                                                                                    <th>عنوان المهمة</th>
+                                                                                    <th>أسم المكلف بالمهمة</th>
+                                                                                    @*  <th>تاريخ بداية المهمة</th>*@
+                                                                                    <th>تاريخ نهاية المهمة</th>
+                                                                                    @if (ViewBag.AttendeeRole == 1)
+                                                                                    {
+                                                                                        <th> خصائص </th>
+                                                                                    }
+                                                                                    </tr>
+                                                                            </thead>
+                                                                            <tbody id="TaskBody" style="min-height:100px;height:100px">
+                                                                                @{ var taskcount = 1;}
+                                                                                @foreach (var task in ViewBag.Tasks as List<Core.Models.TaskViewModel>)
+                                                                                {
+                                                                                    var userName = (ViewBag.Users as List<Core.Models.UserDropDownViewModel>).Where(x => x.id == task.defermentReason).FirstOrDefault() != null ? (ViewBag.Users as List<Core.Models.UserDropDownViewModel>).Where(x => x.id == task.defermentReason).FirstOrDefault().fullname : "";
+                                                                                    <TR>
+                                                                                        <td>@taskcount</td>
+                                                                                        <td>@task.notes</td>
+                                                                                        <td>@userName</td>
+                                                                                        <td>@task.expectedCompletionDate.ToString("yyyy-MM-dd")</td>
+                                                                                        @if (ViewBag.AttendeeRole == 1)
+                                                                                        {
+                                                                                            <td>
+                                                                                                <a i data-type='2' data-id='@task.meetingNotesId' onclick='ShowDeleteModal(this)' class='btn btn-info btn-danger taskdeletebtn'>حذف</a>
+                                                                                            </td>
+                                                                                        }
+                                                                                    </TR>
+                                                                                    taskcount += 1;
+                                                                                }
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                            <div id="tab-2" class="tab-pane">
+                                                <div class="ibox float-e-margins">
+                                                    <div class="ibox-title">
+                                                        <h4>المتحدثين</h4>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <table class="table table-bordered" style="color:black">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>المتدخل</th>
+                                                                    <th>عنوان التدخل</th>
+                                                                    @*  <th>تاريخ بداية المهمة</th>*@
+                                                                    <th>المدة</th>
+                                                                    <th> خصائص </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="TaskBody" style="min-height:100px;height:100px">
+                                                                @foreach (var speaker in ViewBag.Speakers as List<Core.Models.MeetingAgendaSpeaker>)
+                                                                {
+                                                                    var speakeRNAME = (ViewBag.Attedees as List<Core.Models.MeetingAttendee>).Where(x => x.meetingAttendeeId == speaker.meetingAttendeeId).FirstOrDefault().attendeeName;
+                                                                    var speakeRUserId = (ViewBag.Attedees as List<Core.Models.MeetingAttendee>).Where(x => x.meetingAttendeeId == speaker.meetingAttendeeId).FirstOrDefault().userId;
+                                                                    var speakerdiv = "speakerid" + speakeRUserId;
+                                                                    <tr>
+                                                                        <td>@speakeRNAME</td>
+                                                                        <td>@speaker.subject</td>
+                                                                        <td>@speaker.time</td>
+                                                                        @*<td id="@speakerdiv">
+                                                                                <button data-id="@speakeRUserId" data-time="@speaker.time" id="StartSpeaker" type="button" class="btn btn-primary btn-sm">
+                                                                                    بدء المداخلة
+                                                                                </button>
+                                                                            </td>*@
+                                                                    </tr>
+                                                                }
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="tab-3" class="tab-pane">
+                                                <div class="ibox float-e-margins">
+                                                    <div class="ibox-title">
+                                                        <h4>المتحدثين</h4>
+                                                    </div>
+                                                    <div id="vottingdiv" class="col-lg-12">
+
+                                                        @foreach (var poll in ViewBag.Poll as List<Core.Models.MeetingAgendaPoll>)
+                                                        {
+                                                            var options = (ViewBag.PollOptions as List<Core.Models.MeetingAgendaPollOption>
+                                                                       ).Where(x => x.pollId == poll.pollId).ToList();
+                                                            <div class="col-lg-12" style="border: 1px solid #eee;">
+                                                                <input type="hidden" id="pollid" value="@poll.pollId" />
+                                                                <h2 style="color:black">@poll.pollQuestion</h2>
+                                                                <hr />
+                                                                @foreach (var option in options)
+                                                                {
+                                                                    <div class="form-check" style="padding: 10px;">
+                                                                        <input class="form-check-input flexCheckDefault" name="flexCheckDefault" type="checkbox" value="@option.pollId,@option.pollOptionId" id="flexCheckDefault">
+                                                                        <label class="form-check-label" for="flexCheckDefault">
+                                                                            @option.optionValue
+                                                                        </label>
+                                                                    </div>
+
+                                                                }
+                                                            </div>
+                                                        }
+                                                        <div class="col-lg-12">
+                                                            <button id="SendVotebtn" type="button" style="margin-left: 40%;padding:5px" class="btn btn-primary btn-sm">
+                                                                <i class="fa fa-send" style="margin-left:5px"> </i>ارسال
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    @foreach (var poll in ViewBag.Poll as List<Core.Models.MeetingAgendaPoll>)
+                                                    {
+                                                        <div id="ChartDiv" class="chartdiv" style="display:none">
+
+                                                            @{ var chartid = "myChart" + poll.pollId;}
+                                                            <canvas id="@chartid" style="width:100%;max-width:700px;margin-right:25%"></canvas>
+                                                        </div>
+                                                    }
+                                                    <div id="loaderdiv" style="text-align: center;height: 100%;margin-top: 10%;margin-right: 49%;display:none">
+                                                        <div class="loader"> </div>
+
+                                                        <div class="col-lg-12" style="margin-right: -38%;margin-top: 21px;color: #000;font-weight: bold;">في انتظار انتهاء التصويت</div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 presense-div"  style=" padding-top: 30px;position: fixed;left: 0;">
+                                <div class="chat-users" style="margin-left: 0px;padding: 15px;    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+                                    <div id="pressencelist" class="users-list">
+                                        <h3 style="border-radius: 5px 5px 0 0; padding: 10px; background-color: #bba20b; color: black;">الحضور</h3>
+                                    </div>
+                                    <div class="users-list">
+                                        <h3 style="border-radius: 5px 5px 0 0; padding: 10px; background-color: #bba20b; color: black;">المدعوين</h3>
+                                        @foreach (var attendee in ViewBag.Attedees as List<Core.Models.MeetingAttendee>)
+                                        {
+                                            var divid = "divattendee" + @attendee.userId;
+                                            <div id="@divid" class="chat-user" data-id="@attendee.userId">
+                                                <span class="pull-left label label-primary">@attendee.attendeeOrganization</span>
+                                                <div class="chat-user-name">
+                                                    <a>@attendee.attendeeName</a>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteModal" style="margin-top:10%" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">شاشة تأكيد الحذف </h5>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" value="" id="dataid" />
+                    <input type="hidden" value="" id="dataurl" />
+                    <input type="hidden" value="" id="rang" />
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <p>هل انت متأكد من الحذف  ؟</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="$('#deleteModal').modal('hide')">اغلاق</button>
+                    <button id="deletebtn" type="button" data-id="" class="btn btn-primary" style="margin-top:0">تأكيد</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+    </script>
+    <script>
+        
+        const onConfirmRefresh = function (event) {
+            event.preventDefault();
+            return event.returnValue = "Are you sure you want to leave the page?";
+        }
+        window.addEventListener("beforeunload", onConfirmRefresh, { capture: true });
+
+        let count = 0; // Initialize count to 0
+        var lockResolver;
+        if (navigator && navigator.locks && navigator.locks.request) {
+            const promise = new Promise((res) => {
+                lockResolver = res;
+            });
+            navigator.locks.request('unique_lock_name', { mode: "shared" }, () => {
+                return promise;
+          
+            })
+        }
+        function addDecision() {
+            const decision = document.getElementById("decision").value;
+            const Ldecision = document.getElementById("Ldecision").value;
+            const datepicker3 = document.getElementById("datepicker3").value;
+            const datepicker4 = document.getElementById("datepicker4").value;
+
+
+            if (decision && Ldecision && datepicker3 && datepicker4) { // Check if both fields are filled
+                count++; // Increment count
+                const tableBody = document.getElementById("tableBody");
+                const newRow = tableBody.insertRow(); // Insert a new row
+                const cell1 = newRow.insertCell(0); // Insert count number cell
+                const cell2 = newRow.insertCell(1); // Insert first name cell
+                const cell3 = newRow.insertCell(2);
+                const cell4 = newRow.insertCell(3);
+                const cell5 = newRow.insertCell(4);
+                cell1.innerHTML = count;
+                cell2.innerHTML = decision;
+                cell3.innerHTML = Ldecision;
+                cell4.innerHTML = datepicker3;
+                cell5.innerHTML = datepicker4;
+
+            }
+
+        }
+        let counts = 0; // Initialize count to 0
+        function addTask() {
+            const Task = document.getElementById("Task").value;
+            const TaskName = document.getElementById("TaskName").value;
+            const datepicker1 = document.getElementById("datepicker1").value;
+            const datepicker2 = document.getElementById("datepicker2").value;
+
+
+            if (Task && TaskName) { // Check if both fields are filled
+                counts++; // Increment count
+                const TaskBody = document.getElementById("TaskBody");
+                const newRow = TaskBody.insertRow(); // Insert a new row
+                const cell1 = newRow.insertCell(0); // Insert count number cell
+                const cell2 = newRow.insertCell(1); // Insert first name cell
+                const cell3 = newRow.insertCell(2);
+                const cell4 = newRow.insertCell(3);
+                const cell5 = newRow.insertCell(4);
+                cell1.innerHTML = counts;
+                cell2.innerHTML = Task;
+                cell3.innerHTML = TaskName;
+                cell4.innerHTML = datepicker1;
+                cell5.innerHTML = datepicker2;
+
+            }
+
+        }
+        $('.flexCheckDefault').on('change', function () {
+            $(this).parent().parent().find('.flexCheckDefault').prop('checked', false);
+            $(this).prop('checked', true);
+        });
+        function ShowDeleteModal(ele) {
+            $('#deleteModal').modal('show')
+            $("#dataid").val($(ele).data("id"));
+            $("#dataurl").val($(ele).data("type"));
+            $("#rang").val($(ele).parent().parent().find("td:first").html())
+        }
+
+    </script>
+</body>
+
+</html>

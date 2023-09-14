@@ -1,0 +1,253 @@
+﻿@model IEnumerable<WebApplication5.Models.MeetingHomePageViewModel>
+@{
+    ViewBag.Title = "الرئيسية";
+    string name = Newtonsoft.Json.JsonConvert.DeserializeObject<Core.Models.TokenViewModel>(HttpContext.Current.Session[WebApplication5.Models.UserToken.USER_SESSION_VALUE].ToString()).authData.fullname;
+}
+<style>
+    .containerFixed {
+        height: 200% !important
+    }
+
+    .fa-clock-o {
+        margin-left: 5px;
+    }
+</style>
+
+
+<div class="contentIndex">
+    <div class="card" style=" margin-right:18%">
+        <div class="bodycard">
+            <div class="row" style=" background-color: #f5f5f5; border-radius: 5px; margin-right: -71px;">
+                <div class="col-lg-6">
+                    <div class="fixedtext">
+                        <label for="welcome" style="color:#173654 ;font-size: 50px;">مرحبا بعودتك </label>
+                        <div class="fixedtextname" style="color:#173654 ;">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@name
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-15" dir="ltr">
+                    <div class="box-index-color">
+                        <div class="rb-item" ng-repeat="itembx">
+                            <div class="timestamp" style=" margin-bottom: -80px; ">
+                                <label id="dayNew" style="color:#fff; float: right ;margin-right: 15%; font-size:19px">  </label>
+                                <label style="color:#fff;float: right;font-size:19px "> &nbsp;,&nbsp;</label>&nbsp;
+                                <label id="dateNew" style="color:#fff;float: right;font-size:19px">  </label><br>
+                                <fieldset style="color:#fff ;font-size: 55px;  margin-top: 5%;">
+                                    <span id="hours">&nbsp;</span>:
+                                    <span id="minutes">&nbsp;</span>:
+                                    <span id="seconds"> </span>
+                                    <span id="ampm" style="font-size: 10px;"> </span>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <br><br>
+
+    <div class="card">
+        <div class="bodycard">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <i class="fa fa-bell"></i> &nbsp;التنبيهات
+                        </div>
+                        <div class="panel-body">
+                            <div id="notidiv" class="ibox float-e-margins">
+
+                                @if (ViewBag.Notis.Count == 0)
+                                {
+                                    <p style="text-align: center;padding: 10px;font-weight: bold;">لا يوجد اجتماعت اليوم</p>
+                                }
+                                <ul class="todo-list m-t col-lg-12">
+                                    @foreach (var noti in ViewBag.Notis as List<Core.Models.NotificationViewModel>)
+                                    {
+                                        var style = "";
+                                        if (!noti.isRead)
+                                        {
+                                            style = "background: #5f8c667a;";
+                                        }
+                                        <li style="@style">
+                                            <span class="m-l-xs" style="color: #173654;">@noti.notificationHeadline</span>
+                                            <small class="label label-danger" style="float: right; background-color: #bba20b !important"><i class="fa fa-clock-o"></i>@noti.lastActivityDateTime.ToShortDateString()</small>
+                                        </li>
+                                    }
+                                </ul>
+                                <hr>
+                                <a href="@Url.Action("ShowAllNotification","Home")" style="color: #bba20b; margin-right: 30%; font-size: 15px; "><i class="fa fa-angle-right">&nbsp;&nbsp; </i><strong>مشاهدة جميع التنبيهات</strong></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            اليوم
+                        </div>
+                        <div class="panel-body ">
+
+                            @if (Model.Count() == 0)
+                            {
+                                <p style="text-align: center;padding: 10px;font-weight: bold;">لا يوجد اجتماعت اليوم</p>
+                            }
+                            <ul class="todo-list m-t col-lg-12">
+
+                                @foreach (var meeting in Model)
+                                {
+                                    <li onclick="showdiv(this)" style="position:relative">
+                                        <span class="m-l-xs ">@meeting.title</span>
+                                        @{ var date = meeting.meeting.meetingDate.ToShortDateString() + " " + meeting.meeting.meetingEndTime;
+                                            var meetingdate = Convert.ToDateTime(date);
+                                            TimeSpan duration = meetingdate - DateTime.Now;
+                                            var endtime = (duration.TotalSeconds == 0 || duration.TotalSeconds < 0);
+                                        }
+                                        @if (meeting.InvitationStatus == 2)
+                                        {
+                                            <small class="label label-danger" style="float:right;background-color:red !important"><i class="fa fa-times"></i> تم رفض الدعوة</small>
+
+                                        }
+                                        else if (meeting.meeting.meetingStatus == 2)
+                                        {
+                                            <small class="label label-danger" style="float: right; background-color: #f1a13b !important"><i class="fa fa-clock-o"></i> بدء الاجتماع</small>
+
+                                        }
+                                        else if (endtime || meeting.meeting.meetingStatus == 3)
+                                        {<small class="label label-danger" style="float: right; background-color: #645746 !important"><i class="fa fa-clock-o"></i> انتهى الاجتماع</small>
+
+                                        }
+                                        else if (meeting.meeting.meetingStatus == 4)
+                                        {<small class="label label-danger" style="float: right; background-color: #c93a14 !important"><i class="fa fa-clock-o"></i> تم الغاء الاجتماع</small>
+
+                                        }
+                                        else if (meeting.meeting.meetingStatus == 1)
+                                        {
+                                            if (meeting.time == null)
+                                            {
+                                                <small class="label label-danger" style="float: right; background-color: #3c8531 !important"><i class="fa fa-clock-o"></i>حان وقت الاجتماع</small>
+                                            }
+                                            else
+                                            {
+                                                <small class="label label-danger" style="float: right; background-color: #3c8531 !important"><i class="fa fa-clock-o"></i>@meeting.time</small>
+                                            }
+
+                                        }
+
+                                        <div id="meetinginfo" style="display:none;padding: 5px;border-top: 1px solid #a09898;margin-top: 5px;">
+                                            <div style="width:100%;font-weight: bold;width: 100%;font-size: 12px;">
+                                                <i class="fa fa-bookmark-o"></i> @meeting.title<br />
+                                                <i class="fa fa-clock-o"></i> @meeting.meeting.meetingStartTime - @meeting.meeting.meetingEndTime
+                                                <br />
+                                                <i class="fa fa-home"></i>
+                                            </div>
+                                            <div style="width:100%;margin-top:10px">
+                                                @if (meeting.meeting.meetingStatus != 4 && meeting.meeting.meetingStatus != 3)
+                                                {
+                                                    <a href="../Meeting/StartMeeting?mid=@meeting.meeting.meetingId&uid=@meeting.UserName&userId=@meeting.userId" class="btn btn-success">الانضمام الى الاجتماع</a>
+                                                }
+                                                <a href="@Url.Action("View","Meeting", new { Id = meeting.meeting.meetingId})" class="btn btn-success">بيانات الاجتماع</a>
+                                            </div>
+                                        </div>
+                                        <i class="fa fa-arrow-circle-down" style="position: absolute;color: #173654;FLOAT: LEFT; top: 12px;left: 17px;"></i>
+                                    </li>
+                                }
+                                @*<li>*@
+                                @*<span class="m-l-xs">meeting1</span>
+                                        <small class="label  label-primary"><i class="fa fa-clock-o"></i> 42 mins</small>
+                                    </li>
+                                    <li>
+                                        <span class="m-l-xs">Task2</span>
+                                        <small class="label label-info"><i class="fa fa-clock-o"></i> 3 hour</small>
+                                    </li>
+                                    <li>
+                                        <span class="m-l-xs">meeting7</span>
+                                        <small class="label label-info"><i class="fa fa-clock-o"></i> 4 hour</small>
+                                    </li>*@
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+
+    <script>
+        function showdiv(ele) {
+            if (!$(ele).find("#meetinginfo").hasClass("show")) {
+                $(ele).find("#meetinginfo").addClass("show")
+                $(ele).find("#meetinginfo").fadeIn();
+            } else {
+                $(ele).find("#meetinginfo").removeClass("show")
+                $(ele).find("#meetinginfo").fadeOut();
+            }
+        }
+        var padSingleDigit = function (num) {
+            if (num < 10) {
+                return "0" + num;
+            } else {
+                return num;
+            }
+        };
+        var displayCurrentTime = function () {
+            var today = new Date();
+            var hour = today.getHours();
+            var min = today.getMinutes();
+            var sec = today.getSeconds();
+
+            var ap = "AM";
+
+            if (hour > 12) {
+                hour = hour - 12;
+                ap = "PM";
+            } else {
+                switch (hour) {
+                    case 12:
+                        ap = "PM";
+                        break;
+                    case 0:
+                        ap = "AM";
+                        break;
+                }
+            }
+            document.getElementById("hours").firstChild.nodeValue = padSingleDigit(hour);
+            document.getElementById("minutes").firstChild.nodeValue = padSingleDigit(min);
+            document.getElementById("seconds").firstChild.nodeValue = padSingleDigit(sec);
+            document.getElementById("ampm").firstChild.nodeValue = padSingleDigit(ap);
+        };
+
+        window.onload = function () {
+            displayCurrentTime();
+            setInterval(displayCurrentTime, 1000);
+        };
+    </script>
+
+
+    <!-- for Day AND Date -->
+    <script>
+        const weekday = ["الأحد", "الأثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+        const d = new Date();
+        let day = weekday[d.getDay()];
+        document.getElementById("dayNew").innerHTML = day;
+
+        let date = d.getDate();
+        document.getElementById("dateNew").innerHTML = date;
+        $()
+    </script>
+
+}
+
+
+
+<!--  scripts -->

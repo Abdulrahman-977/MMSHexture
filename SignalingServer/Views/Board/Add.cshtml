@@ -1,0 +1,364 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewBag.Title = "إضافة لجنة";
+}
+<div id="wrapper" style="margin-right:18px; margin-top:40px;">
+    <h2 class="col-lg-10" style="color:#bba20b ;margin-inline: -41px;"><span class="material-symbols-outlined"><span class="material-symbols-outlined"><span class="material-symbols-outlined" style="font-size: 18px;">group</span></span></span>&nbsp;&nbsp;<b>إضافة لجنة </b></h2>
+    <div class="ibox-content" style="margin-left:50px;margin-right:185px ;margin-bottom: 7%;">
+        <h3 style="color: #406847; margin-right: 4px; ">
+            <span class="material-symbols-outlined"
+                  style="font-size: 18px;margin-right: 7px;">feed</span> معلومات اللجنة
+        </h3>
+        <form method="post">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group" style="margin-right:-200px;">
+                        <label>نوع اللجنة *:</label>
+                        <select class="form-control m-b required" required name="boardIsActive" id="boardIsActive">
+                            <option value="choose">أختر</option>
+                            <option value="1"> أعضاء لجنة داخلية</option>
+                            <option value="2"> أعضاء لجنة خارجية </option>
+                            <option value="3"> أعضاء لجنة داخلية وخارجية</option>
+
+
+                        </select>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+            <br>
+            <a href="@Url.Action("Index","Board")" class="btn btn-primary" style="float:left ; margin-left:13px;"> <span class="bold">رجوع الى القائمة</span></a>
+            <button title="Create new cluster" class="btn btn-primary" style="float:left ; margin-left:13px;"><i class="fa fa-save"></i> <span class="bold">تسجيل</span></button>
+            <br />
+        </form>
+
+    </div>
+    <div id="wrapper" style="margin-right:18px; margin-top:40px;">
+
+        <div class="ibox-content" style="margin-left:66px;margin-right:98px ;margin-bottom: 7%;">
+            <h3 style="color: #406847; margin-right: 4px; ">
+                <span class="material-symbols-outlined"
+                      style="font-size: 18px;margin-right: 7px;">feed</span>  اللجنة الداخلية
+            </h3>
+            <form method="post">
+                <div class="row">
+                    <div class="col-lg-6">
+
+                        <div class="form-group" style="margin-right:-210px;">
+
+
+
+                            <label>أسم اللجنة *:</label>
+                            <input name="boardName" id="boardName" type="text" required class="form-control required">
+                        </div>
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>اسم مدير اللجنة *:</label>
+                            <select class="form-control m-b required" required name="userId" id="userId">
+                                <option value=""> أختر مدير اللجنة</option>
+                                @foreach (var user in ViewBag.Users as List<Core.Models.UserDropDownViewModel>)
+                                {
+                                    <option value="@user.id">@user.fullname</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="margin-right:-200px;">
+                            <input type="radio" name="state" value="true" /> <label>مؤقتة </label>
+                            <input type="radio" name="state" value="false" /> <label>دائمة </label>
+
+                        </div>
+
+                        @*<div class="form-group" style="margin-right:-210px;">
+                                <label>تاريخ أنشاء اللجنة </label>
+                                <input id="surname" name="surname" type="date" required class="form-control required">
+                            </div>*@
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>المسمى الوظيفي *:</label>
+                            <select class="form-control m-b required" required name="boardIsActive" id="boardIsActive">
+                                <option value="">أختر</option>
+                                <option value="true">عضو</option>
+                                <option value="false">مدير</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>الحالة *:</label>
+                            <select class="form-control m-b required" required name="boardIsActive" id="boardIsActive">
+                                <option value="">أختر</option>
+                                <option value="true">نشط</option>
+                                <option value="false">غير نشط</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+
+                <br>
+                <a href="@Url.Action("Index","Board")" class="btn btn-primary" style="float:left ; margin-left:13px;"> <span class="bold">رجوع الى القائمة</span></a>
+                <button title="Create new cluster" class="btn btn-primary" style="float:left ; margin-left:13px;"><i class="fa fa-save"></i> <span class="bold">تسجيل</span></button>
+                <br>
+
+
+                <br>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="wrapper" style="margin-right:18px; margin-top:40px;">
+
+        <div class="ibox-content" style="margin-left: 66px; margin-right: 98px; margin-bottom: 7%;">
+            <h3 style="color: #406847; margin-right: 4px; ">
+                <span class="material-symbols-outlined"
+                      style="font-size: 18px;margin-right: 7px;">feed</span>  اللجنة الخارجية
+            </h3>
+            <form method="post">
+                <div class="row">
+                    <div class="col-lg-6">
+
+                        <div class="form-group" style="margin-right:-210px;">
+
+
+
+                            <label>أسم اللجنة *:</label>
+                            <input name="boardName" id="boardName" type="text" required class="form-control required">
+                        </div>
+                        <div class="form-group" style="margin-right:-210px;">
+                            <label>أسم مدير اللجنة*:</label>
+                            <input id="surname" name="surname" type="text" required class="form-control required">
+                        </div>
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>المسمى الوظيفي*: </label>
+                            <input id="address" name="address" type="text" required class="form-control">
+                        </div>
+                        <div class="form-group" style="margin-right:-200px;">
+
+                            <input type="radio" name="state" value="true" /> <label>مؤقتة </label>
+                            <input type="radio" name="state" value="false" /> <label>دائمة </label>
+
+
+                        </div>
+
+                        @*<div class="form-group" style="margin-right:-210px;">
+                                <label>تاريخ أنشاء اللجنة </label>
+                                <input id="surname" name="surname" type="date" required class="form-control required">
+                            </div>*@
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>البريد الألكتروني*: </label>
+                            <input id="surname" name="surname" type="text" required class="form-control required">
+                        </div>
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>رقم الجوال*: </label>
+                            <input id="address" name="address" type="text" required class="form-control">
+                        </div>
+
+
+
+
+
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>الحالة *:</label>
+                            <select class="form-control m-b required" required name="boardIsActive" id="boardIsActive">
+                                <option value="">أختر</option>
+                                <option value="true">نشط</option>
+                                <option value="false">غير نشط</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+
+                <br>
+                <a href="@Url.Action("Index","Board")" class="btn btn-primary" style="float:left ; margin-left:13px;"> <span class="bold">رجوع الى القائمة</span></a>
+                <button title="Create new cluster" class="btn btn-primary" style="float:left ; margin-left:13px;"><i class="fa fa-save"></i> <span class="bold">تسجيل</span></button>
+                <br>
+
+
+                <br>
+            </form>
+            <br>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    <div id="wrapper" style="margin-right:18px; margin-top:40px;">
+
+        <div class="ibox-content" style="margin-left: 66px; margin-right: 98px; margin-bottom: 7%;">
+            <h3 style="color: #406847; margin-right: 4px; ">
+                <span class="material-symbols-outlined"
+                      style="font-size: 18px;margin-right: 7px;">feed</span> اللجنة الداخلية و الخارجية
+            </h3>
+            <form method="post">
+                <div class="row">
+                    <div class="col-lg-6">
+
+                        <div class="form-group" style="margin-right:-210px;">
+
+
+
+                            <label>أسم اللجنة الداخلية *:</label>
+                            <input name="boardName" id="boardName" type="text" required class="form-control required">
+                        </div>
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label> اسم مدير اللجنة الداخلية *:</label>
+                            <select class="form-control m-b required" required name="userId" id="userId">
+                                <option value=""> أختر مدير اللجنة</option>
+                                @foreach (var user in ViewBag.Users as List<Core.Models.UserDropDownViewModel>)
+                                {
+                                    <option value="@user.id">@user.fullname</option>
+                                }
+                            </select>
+
+
+                        </div>
+
+
+
+                        <br />
+
+                        <div class="form-group" style="margin-right:-210px;">
+
+                            <label>أسم اللجنة الخارجية *:</label>
+                            <input name="boardName" id="boardName" type="text" required class="form-control required">
+                        </div>
+
+                        <div class="form-group" style="margin-right:-210px;">
+                            <label>أسم مدير اللجنة الخارجي*:</label>
+                            <input id="surname" name="surname" type="text" required class="form-control required">
+                        </div>
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>المسمى الوظيفي للعضو/للمدير الخارجي*: </label>
+                            <input id="address" name="address" type="text" required class="form-control">
+                        </div>
+
+                        <div class="form-group" style="margin-right:-200px;">
+
+                            <input type="radio" name="state" value="true" /> <label>مؤقتة </label>
+                            <input type="radio" name="state" value="false" /> <label>دائمة </label>
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>المسمى الوظيفي للعضو/المدير الداخلي *:</label>
+                            <select class="form-control m-b required" required name="boardIsActive" id="boardIsActive">
+                                <option value="">أختر</option>
+                                <option value="true">عضو</option>
+                                <option value="false">مدير</option>
+                            </select>
+
+
+                        </div>
+
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>حاله اللجنة الداخلية *:</label>
+                            <select class="form-control m-b required" required name="boardIsActive" id="boardIsActive">
+                                <option value="">أختر</option>
+                                <option value="true">نشط</option>
+                                <option value="false">غير نشط</option>
+                            </select>
+
+                            <br />
+                        </div>
+
+
+
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>البريد الألكتروني*: </label>
+                            <input id="surname" name="surname" type="text" required class="form-control required">
+                        </div>
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>رقم الجوال*: </label>
+                            <input id="address" name="address" type="text" required class="form-control">
+                        </div>
+
+
+
+
+
+                        <div class="form-group" style="margin-right:-200px;">
+                            <label>الحالة *:</label>
+                            <select class="form-control m-b required" required name="boardIsActive" id="boardIsActive">
+                                <option value="">أختر</option>
+                                <option value="true">نشط</option>
+                                <option value="false">غير نشط</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+
+                <br>
+                <a href="@Url.Action("Index","Board")" class="btn btn-primary" style="float:left ; margin-left:13px;"> <span class="bold">رجوع الى القائمة</span></a>
+                <button title="Create new cluster" class="btn btn-primary" style="float:left ; margin-left:13px;"><i class="fa fa-save"></i> <span class="bold">تسجيل</span></button>
+                <br>
+
+
+                <br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </form>
+
+        </div>
+
+    </div>
+    @section scripts{
+
+        @if (ViewBag.Success != null)
+        {
+            if (ViewBag.Success)
+            {
+                <script>
+                    var x = document.getElementById("snackbar");
+                    // Add the "show" class to DIV
+                    x.className = "show";
+                    // After 3 seconds, remove the show class from DIV
+                    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+                </script>
+            }
+            else
+            {
+
+                <script>
+
+                    var x = document.getElementById("snackbar");
+                    // Add the "show" class to DIV
+                    x.className = "show";
+                    // After 3 seconds, remove the show class from DIV
+                    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+                </script>
+            }
+        }
+    }

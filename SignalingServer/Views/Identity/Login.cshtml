@@ -1,0 +1,126 @@
+﻿@{
+Layout = null;
+}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <title>HextureMMS | تسجيل دخول</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @*<link href="~/Content/css/bootstrap.min.css" rel="stylesheet">*@
+    <link href="~/Content/css/bootstrap-rtl.min.css" rel="stylesheet">
+    <link href="~/Content/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/Content/css/style.css" rel="stylesheet">
+    <link href="~/Content/css/animate.css" rel="stylesheet">
+
+    @*<link href="~/Content/css/bootstrapp-rtl.min.css" rel="stylesheet">*@
+
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+
+
+
+</head>
+
+
+<body>
+    <div id="header_containerX">
+        <div class="row">
+            <div class="Mtitle">
+                <span class="Ytitle">إدارة</span>&nbsp;<span class="Ytitle">اللجان</span>&nbsp;<span class="Ytitle">والإجتماعات</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="
+    margin-right: 25%;
+" >
+        <div class="forms" style="
+    width: 100%;
+">
+            <div class="form login" style="
+    margin: 0;
+">
+                <div style="margin-left: 42px;width: Calc(100% - 59px);text-align:center">
+                    <span class="title" style=" border-bottom: 2px solid; border-color: #bba20b; font-size: 30px; ">
+                        تسجيل
+                        الدخول
+                    </span>
+                </div>
+                <form method="post">
+                    <div class="input-field">
+                        <input type="text" placeholder="البريد الالكتروني" name="username" id="username" required>
+                        <i class="uil uil-envelope " icon style=""></i>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" class="password" id="password" name="password" placeholder="كلمة المرور" required>
+                        <i class="uil uil-lock " icon style=""></i>
+                        @*<i class="uil uil-eye-slash showHidePw"></i>*@
+                    </div>
+                    @*<div class="checkbox-text">
+                        <div class="checkbox-content">
+                            <input type="checkbox" id="logCheck">
+                            <label for="logCheck" class="text"> &nbsp;&nbsp;تذكرني</label>
+                        </div>
+
+                        <a href="@Url.Action("ForgetPassword","identity")" class="text">نسيت كلمة المرور ؟</a>
+                    </div>*@
+
+                    <div class="input-field button">
+                        <input type="submit" value="تسجيل الدخول" style="
+    width: Calc(100% - 50px);
+">
+                    </div>
+                    @if (ViewBag.login != null)
+                    {
+                        <p style="color:red;text-align:center;margin-top:5px"> الرجاء التأكد من كلمة المرور او البريد الالكتروني!</p>
+                    }
+                </form>
+            </div>
+            <div class="footer" style="text-align: center;">
+                <div id="footer">
+                    <strong style="color:#333;"> جميع الحقوق محفوظة - خلايا المستقبل للاتصالات وتقنية المعلومات</strong>&copy; 2023
+                </div>
+            </div>
+            <div style="z-index:11111111;background-color:green;color:#fff" id="snackbar">تمت العملية بنجاح</div>
+            <div style="z-index:11111111;background-color:red;color:#fff" id="snackbarerror">الرجاء تعبئة كل الخانات !</div>
+
+            <script src="~/Content/js/jquery-2.1.1.js"></script>
+           
+            <script src="~/Content/js/jquery-ui.custom.min.js"></script>
+            <script src="~/Content/js/bootstrap.min.js"></script>
+            <!-- Page-Level Scripts -->
+          
+            @if (ViewBag.Success != null)
+            {
+                if (ViewBag.Success)
+                {
+                    <script>
+                        var x = document.getElementById("snackbar");
+                        // Add the "show" class to DIV
+                        x.className = "show";
+                        // After 3 seconds, remove the show class from DIV
+                        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+                    </script>
+                }
+                else
+                {
+
+                    <script>
+
+                        var x = document.getElementById("snackbarerror");
+                        // Add the "show" class to DIV
+                        x.className = "show";
+                        // After 3 seconds, remove the show class from DIV
+                        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+                    </script>
+                }
+            }
+            
+
+
+</body>
+</html>
+
+
